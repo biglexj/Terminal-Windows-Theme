@@ -45,56 +45,60 @@ foreach ($line in $banner -split "`n") {
 }
 
 # ===========================
-# ℹ️ Info del sistema optimizada
+# ℹ️ Info del sistema optimizada y arreglada
 # ===========================
 
-# Calcular uptime correctamente
-$lastBootTime = (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
-$uptime = (Get-Date) - $lastBootTime
+function Show-SystemInfoTable {
+    # Calcular uptime correctamente
+    $lastBootTime = (Get-CimInstance -ClassName Win32_OperatingSystem).LastBootUpTime
+    $uptime = (Get-Date) - $lastBootTime
 
-# Usar LinkedHashMap para mantener el orden
-$info = [ordered]@{
-    "📅 Fecha"      = Get-Date -Format 'dd/MM/yyyy HH:mm'
-    "💻 Equipo"     = $env:COMPUTERNAME
-    "🚀 Uptime"     = "{0:dd}d {0:hh}h {0:mm}m" -f $uptime
-    "👤 Usuario"    = $env:USERNAME
-    "⚡ PowerShell" = "v$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)"
-    "🖥️  SO"        = (Get-WmiObject -Class Win32_OperatingSystem).Caption
+    # Formatear los valores antes de crear la tabla
+    $data = @(
+        @{ Label = " S.O";       Value = (Get-CimInstance -Class Win32_OperatingSystem).Caption },
+        @{ Label = " Equipo";    Value = $env:COMPUTERNAME },
+        @{ Label = " Usuario";   Value = $env:USERNAME },
+        @{ Label = " Uptime";    Value = "{0:dd}d {0:hh}h {0:mm}m" -f $uptime },
+        @{ Label = " Fecha";     Value = Get-Date -Format 'dd/MM/yyyy HH:mm' },
+        @{ Label = " PowerShell";Value = "v$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)" }
+    )
+    
+    # Usar el mismo ancho que el banner (67 caracteres)
+    $tableWidth = 67
+    $colors = @('Green', 'Yellow', 'Magenta', 'Blue', 'Cyan', 'Red')  # Ajustado para 5 elementos
+    
+    # Línea superior
+    Write-Host ("┌" + "─" * ($tableWidth - 2) + "┐") -ForegroundColor $colors[0]
+    
+    # Filas de datos
+    $data | ForEach-Object -Begin { $i = 0 } -Process {
+        $row = $_
+        $textColor = $colors[$i % $colors.Length]
+        $borderColor = $colors[0]
+        
+        $left = $row.Label.PadRight(20)
+        $right = $row.Value
+        
+        # Calcular espacios para llenar exactamente el ancho de la tabla
+        $contentLength = $left.Length + 3 + $right.Length
+        $padding = $tableWidth - $contentLength - 2
+        if ($padding -lt 0) { $padding = 0 }
+        
+        # Línea de contenido
+        Write-Host "│" -ForegroundColor $borderColor -NoNewline
+        Write-Host "$left | $right" -ForegroundColor $textColor -NoNewline
+        Write-Host (" " * $padding) -NoNewline
+        Write-Host "│" -ForegroundColor $borderColor
+        $i++
+    } 
+    
+    # Línea inferior
+    Write-Host ("└" + "─" * ($tableWidth - 2) + "┘") -ForegroundColor $colors[0]
 }
 
-$tableWidth = 67
+# ¡AQUÍ ESTÁ LA LLAMADA QUE FALTABA!
+Show-SystemInfoTable
 
-# Línea superior
-Write-Host ("┌" + "─" * ($tableWidth - 2) + "┐") -ForegroundColor Cyan
-
-# Cuerpo con colores alternados
-$colorIndex = 0
-$colors = @('Green', 'Yellow', 'Magenta', 'Cyan', 'Blue', 'Red')
-
-foreach ($key in $info.Keys) {
-    $value = $info[$key]
-    # Calcular espacios necesarios para que la línea tenga exactamente $tableWidth caracteres
-    $contentLength = $key.Length + $value.Length + 6  # 6 = "│ " + " │ " + "│"
-    $paddingNeeded = $tableWidth - $contentLength
-    
-    if ($paddingNeeded -gt 0) {
-        $line = "│ {0} │ {1}{2} │" -f $key, $value, (" " * $paddingNeeded)
-    } else {
-        # Si el contenido es muy largo, truncar el valor
-        $maxValueLength = $tableWidth - $key.Length - 8
-        if ($value.Length -gt $maxValueLength) {
-            $value = $value.Substring(0, $maxValueLength - 3) + "..."
-        }
-        $line = "│ {0} │ {1} │" -f $key, $value
-        $line = $line.PadRight($tableWidth - 1) + "│"
-    }
-    
-    Write-Host $line -ForegroundColor $colors[$colorIndex % $colors.Length]
-    $colorIndex++
-}
-
-# Línea inferior
-Write-Host ("└" + "─" * ($tableWidth - 2) + "┘") -ForegroundColor Cyan
 # ===========================
 # 🔗 Aliases de navegación rápida 
 # ===========================
