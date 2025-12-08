@@ -57,16 +57,16 @@ Una configuración personalizada de PowerShell 7 diseñada para optimizar el flu
 | `..` | `../` | Sube un nivel de directorio. |
 | `...` | `../../` | Sube dos niveles de directorio. |
 | `....` | `../../../` | Sube tres niveles de directorio. |
-| `bjpro` | `E:\Proyectos\biglexj` | Proyectos de programación. |
-| `bjdes` | `E:\Descargas` | Carpeta de descargas. |
-| `bjdoc` | `E:\Documentos` | Carpeta de documentos. |
-| `bjimg` | `E:\Imágenes` | Carpeta de imágenes. |
-| `bjmus` | `E:\Música` | Carpeta de música. |
-| `bjvid` | `E:\Vídeos` | Carpeta de vídeos. |
-| `bjass` | `E:\Assets` | Assets generales. |
-| `bjdav` | `E:\Vídeos\DaVinci Resolve` | Proyectos de DaVinci Resolve. |
-| `bjyt` | `E:\Imágenes\YouTube` | Assets para YouTube. |
-| `bjmarca`| `E:\Imágenes\Proyectos\Marca` | Assets de marca personal. |
+| `bjpro` | `D:\Proyectos\biglexj` | Proyectos de programación. |
+| `bjdes` | `D:\Descargas` | Carpeta de descargas. |
+| `bjdoc` | `D:\Documentos` | Carpeta de documentos. |
+| `bjimg` | `D:\Imágenes` | Carpeta de imágenes. |
+| `bjmus` | `D:\Música` | Carpeta de música. |
+| `bjvid` | `D:\Vídeos` | Carpeta de vídeos. |
+| `bjass` | `D:\Assets` | Assets generales. |
+| `bjdav` | `D:\Vídeos\DaVinci Resolve` | Proyectos de DaVinci Resolve. |
+| `bjyt` | `D:\Imágenes\YouTube` | Assets para YouTube. |
+| `bjmarca`| `D:\Imágenes\Proyectos\Marca` | Assets de marca personal. |
 
 ### 🛠️ Utilidades de Desarrollo
 

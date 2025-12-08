@@ -125,17 +125,17 @@ function ... { Set-Location "..\.." }
 function .... { Set-Location "..\..\.." }
 
 # Rutas específicas de Biglex J
-function bjpro { Set-Location "E:\Proyectos" }
-function bjpros { Set-Location "E:\Proyectos\biglexj" }
-function bjdes { Set-Location "E:\Descargas" }
-function bjdoc { Set-Location "E:\Documentos" }
-function bjimg { Set-Location "E:\Imágenes" }
-function bjmus { Set-Location "E:\Música" }
-function bjvid { Set-Location "E:\Vídeos" }
-function bjass { Set-Location "E:\Assets" }
-function bjdav { Set-Location "E:\Vídeos\DaVinci Resolve" }
-function bjyt { Set-Location "E:\Imágenes\YouTube" }
-function bjmarca { Set-Location "E:\Imágenes\Proyectos\Marca" }
+function bjpro { Set-Location "D:\Proyectos" }
+function bjpros { Set-Location "D:\Proyectos\biglexj" }
+function bjdes { Set-Location "D:\Descargas" }
+function bjdoc { Set-Location "D:\Documentos" }
+function bjimg { Set-Location "D:\Imágenes" }
+function bjmus { Set-Location "D:\Música" }
+function bjvid { Set-Location "D:\Vídeos" }
+function bjass { Set-Location "D:\Assets" }
+function bjdav { Set-Location "D:\Vídeos\DaVinci Resolve" }
+function bjyt { Set-Location "D:\Imágenes\YouTube" }
+function bjmarca { Set-Location "D:\Imágenes\Proyectos\Marca" }
 
 # ===========================
 # 🛠️ Utilidades de desarrollo
@@ -198,8 +198,8 @@ function Show-Aliases {
     Write-Host "`n🔗 Aliases de Navegación:" -ForegroundColor Yellow
     Write-Host "  ..     → Subir un directorio" -ForegroundColor Gray
     Write-Host "  ...    → Subir dos directorios" -ForegroundColor Gray  
-    Write-Host "  bjpro  → E:\Proyectos\biglexj" -ForegroundColor Gray
-    Write-Host "  bjyt   → E:\Imágenes\YouTube" -ForegroundColor Gray
+    Write-Host "  bjpro  → D:\Proyectos\biglexj" -ForegroundColor Gray
+    Write-Host "  bjyt   → D:\Imágenes\YouTube" -ForegroundColor Gray
     
     Write-Host "`n🛠️  Comandos de Desarrollo:" -ForegroundColor Yellow
     Write-Host "  gs     → git status" -ForegroundColor Gray
