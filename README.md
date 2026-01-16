@@ -2,7 +2,7 @@
 # 🚀 PowerShell $PROFILE - Biglex J Edition
 # ===========================
 
-Una configuración personalizada de PowerShell 7 diseñada para optimizar el flujo de trabajo de desarrollo y la experiencia en la terminal, con un toque visual único.
+Una configuración personalizada de PowerShell 7 diseñada para optimizar el flujo de trabajo de desarrollo, creación de contenido y la experiencia en la terminal, con un toque visual único. Incluye integración completa con **Ely Intelligence** para gestión de transmisiones en vivo, TTS y contenido de YouTube.
 
 ## ✨ Características Principales
 
@@ -12,6 +12,7 @@ Una configuración personalizada de PowerShell 7 diseñada para optimizar el flu
 - **Autocompletado Avanzado:** `PSReadLine` con predicciones históricas y atajos mejorados.
 - **Aliases de Navegación:** Atajos rápidos para acceder a directorios comunes y de proyectos.
 - **Utilidades de Desarrollo:** Funciones para `git`, `pnpm` y `touch` con feedback visual.
+- **Ely Intelligence & Live Stream:** Comandos dedicados para iniciar el servidor de Ely, transmisiones en vivo, TTS y gestión de contenido de YouTube.
 - **Menú de Ayuda:** Un comando `help` para listar todos los aliases y funciones personalizadas.
 
 ## 📋 Requisitos
@@ -57,7 +58,8 @@ Una configuración personalizada de PowerShell 7 diseñada para optimizar el flu
 | `..` | `../` | Sube un nivel de directorio. |
 | `...` | `../../` | Sube dos niveles de directorio. |
 | `....` | `../../../` | Sube tres niveles de directorio. |
-| `bjpro` | `D:\Proyectos\biglexj` | Proyectos de programación. |
+| `bjpro` | `D:\Proyectos` | Carpeta principal de proyectos. |
+| `bjpros` | `D:\Proyectos\biglexj` | Proyectos de Biglex J. |
 | `bjdes` | `D:\Descargas` | Carpeta de descargas. |
 | `bjdoc` | `D:\Documentos` | Carpeta de documentos. |
 | `bjimg` | `D:\Imágenes` | Carpeta de imágenes. |
@@ -82,6 +84,32 @@ Una configuración personalizada de PowerShell 7 diseñada para optimizar el flu
 | `build` | `pnpm run build` | Compila el proyecto para producción. |
 | `start` | `pnpm start` | Inicia el proyecto (usualmente en producción). |
 | `install` | `pnpm install` | Instala las dependencias. |
+
+### 🤖 Ely Intelligence & Live Stream
+
+| Comando | Acción | Descripción |
+|---------|--------|-------------|
+| `ely-inteligence` | Inicia el servidor de Ely Intelligence | Ejecuta el script `server_ely_inteligence.ps1` para iniciar el backend de Ely. |
+| `live` | Inicia el Live Stream | Ejecuta el script `start_live.ps1` para iniciar la transmisión en vivo. |
+| `livetts` | Inicia Live TTS | Ejecuta el script `run-livetts.ps1` para el sistema de Text-to-Speech en vivo. |
+| `add-video -url <url> -title <título> -description <desc>` | Añade un video a videos-yt.json | Agrega un nuevo video al archivo de configuración con los parámetros especificados. |
+| `add-karaoke -url <url> -title <título> -description <desc> -tags <tags>` | Añade un karaoke | Agrega un karaoke detectando automáticamente el género por los tags proporcionados. |
+
+**Ejemplos de uso:**
+
+```powershell
+# Iniciar el servidor de Ely Intelligence
+ely-inteligence
+
+# Iniciar transmisión en vivo
+live
+
+# Añadir un video
+add-video -url "https://youtube.com/watch?v=..." -title "Mi Video" -description "Descripción del video"
+
+# Añadir un karaoke con tags
+add-karaoke -url "https://youtube.com/watch?v=..." -title "Canción JPop" -description "Karaoke" -tags "jpop,anime"
+```
 
 ### 💡 Ayuda
 

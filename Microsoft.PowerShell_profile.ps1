@@ -190,6 +190,21 @@ function start { pnpm start }
 function install { pnpm install }
 
 # ===========================
+# 🤖 Ely Intelligence & Live Stream
+# ===========================
+function ely-inteligence { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\server_ely_inteligence.ps1" }
+function live { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\start_live.ps1" }
+function livetts { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\run-livetts.ps1" }
+function add-video { 
+    param([string]$url, [string]$title, [string]$description, [string]$tags)
+    & "d:\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "video" -Title $title -Description $description
+}
+function add-karaoke { 
+    param([string]$url, [string]$title, [string]$description, [string]$tags)
+    & "d:\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "karaoke" -Title $title -Description $description -Tags $tags
+}
+
+# ===========================
 # 🎮 Funciones de utilidad
 # ===========================
 
@@ -205,6 +220,13 @@ function Show-Aliases {
     Write-Host "  gs     → git status" -ForegroundColor Gray
     Write-Host "  dev    → pnpm run dev" -ForegroundColor Gray
     Write-Host "  build  → pnpm run build" -ForegroundColor Gray
+
+    Write-Host "`n🤖 Ely Intelligence:" -ForegroundColor Yellow
+    Write-Host "  ely-inteligence → Iniciar Servidor Ely" -ForegroundColor Gray
+    Write-Host "  live            → Iniciar Live Stream" -ForegroundColor Gray
+    Write-Host "  livetts         → Iniciar Live TTS" -ForegroundColor Gray
+    Write-Host "  add-video       → Añadir video a videos-yt.json" -ForegroundColor Gray
+    Write-Host "  add-karaoke     → Añadir karaoke (detecta género por tags)" -ForegroundColor Gray
     
     Write-Host "`n💡 Tip: Escribe 'Show-Aliases' para ver esta ayuda`n" -ForegroundColor Cyan
 }
@@ -219,3 +241,8 @@ New-Alias -Name "aliases" -Value "Show-Aliases"
 Write-Host "`n🎉 ¡Terminal de Biglex J cargado exitosamente!" -ForegroundColor Green
 Write-Host "💡 Escribe 'help' para ver todos los comandos disponibles" -ForegroundColor Cyan
 Write-Host "🚀 ¡A programar y crear contenido épico!" -ForegroundColor Magenta
+
+#f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
+
+Import-Module -Name Microsoft.WinGet.CommandNotFound
+#f45873b3-b655-43a6-b217-97c00aa0db58
