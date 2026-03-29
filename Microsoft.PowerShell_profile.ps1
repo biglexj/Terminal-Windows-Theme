@@ -1,6 +1,7 @@
 # ===========================
-# 🚀 PowerShell $PROFILE - Biglex J Edition v2.0
+# 🚀 PowerShell $PROFILE - Biglex J Edition v3.0
 # ===========================
+$ProfileStartTime = [DateTime]::Now
 
 # --- Oh My Posh (tema personalizado) ---
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\biglexj.omp.json" | Invoke-Expression
@@ -44,7 +45,7 @@ $banner = @'
 ║           CLI Version 2.0.0 • Build: CREATOR-EDITION            ║
 ║                                                                 ║
 ║   🎨 Content Creator | 💻 Developer | 🎵 JPop Enthusiast        ║
-║   🚀 C# • React • Python | 🎬 DaVinci • Blender • OBS           ║
+║   🚀 C# • Astro • Python | 🎬 DaVinci • Blender • OBS           ║
 ║                                                                 ║
 ║              > Ready to create amazing content...               ║
 ║                                                                 ║
@@ -123,20 +124,22 @@ function .. { Set-Location ".." }
 function ... { Set-Location "..\.." }
 function .... { Set-Location "..\..\.." }
 
+
 # Rutas específicas de Biglex J
-function bjpro { Set-Location "D:\Proyectos" }
-function bjpros { Set-Location "D:\Proyectos\biglexj" }
-function bjdes { Set-Location "D:\Descargas" }
-function bjdoc { Set-Location "D:\Documentos" }
-function bjimg { Set-Location "D:\Imágenes" }
-function bjmus { Set-Location "D:\Música" }
-function bjvid { Set-Location "D:\Vídeos" }
-function bjass { Set-Location "D:\Assets" }
-function bjdav { Set-Location "D:\Vídeos\DaVinci Resolve" }
-function bjyt { Set-Location "D:\Imágenes\YouTube" }
-function bjmarca { Set-Location "D:\Imágenes\Proyectos\Marca" }
-function docs { Set-Location "D:\Proyectos\biglexj\Docs" }
-function aurora { Set-Location "D:\Proyectos\biglexj\Aurora---Blog" }
+$Drive = "D:"
+function bjpro { Set-Location "$Drive\Proyectos" }
+function bjpros { Set-Location "$Drive\Proyectos\biglexj" }
+function bjdes { Set-Location "$Drive\Descargas" }
+function bjdoc { Set-Location "$Drive\Documentos" }
+function bjimg { Set-Location "$Drive\Imágenes" }
+function bjmus { Set-Location "$Drive\Música" }
+function bjvid { Set-Location "$Drive\Vídeos" }
+function bjass { Set-Location "$Drive\Assets" }
+function bjdav { Set-Location "$Drive\Vídeos\DaVinci Resolve" }
+function bjyt { Set-Location "$Drive\Imágenes\YouTube" }
+function bjmarca { Set-Location "$Drive\Imágenes\Proyectos\Marca" }
+function docs { Set-Location "$Drive\Proyectos\biglexj\Docs" }
+function aurora { Set-Location "$Drive\Proyectos\biglexj\Aurora---Blog" }
 
 # ===========================
 # 🛠️ Utilidades de desarrollo
@@ -184,6 +187,15 @@ function gpl {
     Write-Host "⬇️  Cambios descargados del repositorio remoto" -ForegroundColor Blue
 }
 
+function bj-sync {
+    param([string]$message = "Syncing changes from terminal")
+    git pull
+    git add .
+    git commit -m $message
+    git push
+    Write-Host "✅ Sincronización completa" -ForegroundColor Green
+}
+
 # NPM/PNPM shortcuts
 function dev { bun run dev }
 function build { bun run build }
@@ -193,118 +205,24 @@ function install { bun install }
 # ===========================
 # 🤖 Ely Intelligence & Live Stream
 # ===========================
-function ely-intelligence { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\start_ely_core.ps1" }
-function live { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\start_live.ps1" }
-function vozely { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\start_voz_ely.ps1" }
-function voice-ely { & "d:\Proyectos\biglexj\Aurora---Blog\scripts\start_ely_voice_pipeline.ps1" }
+function start-aurora { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_services.ps1" }
+function stop-aurora { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_services.ps1" }
+function backend { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
+function ely-intelligence { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
+function live { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
+function vozely { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
+function voice-ely { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_voice_pipeline.ps1" }
 function add-video { 
     param([string]$url, [string]$title, [string]$description, [string]$tags)
-    & "d:\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "video" -Title $title -Description $description
+    & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "video" -Title $title -Description $description
 }
 function add-karaoke { 
     param([string]$url, [string]$title, [string]$description, [string]$tags)
-    & "d:\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "karaoke" -Title $title -Description $description -Tags $tags
+    & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "karaoke" -Title $title -Description $description -Tags $tags
 }
 
-# ===========================
-# 🎬 PRODUCCIÓN DE CONTENIDO
-# ===========================
-
-# Crear nuevo proyecto de video con estructura automática
-function new-project {
-    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║           🎬 CREAR NUEVO PROYECTO DE VIDEO                     ║" -ForegroundColor Cyan
-    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
-    
-    # Paso 1: Seleccionar canal
-    Write-Host "📺 Selecciona el canal:" -ForegroundColor Yellow
-    Write-Host "  1) @biglexj" -ForegroundColor Gray
-    Write-Host "  2) @ely-vtuber" -ForegroundColor Gray
-    Write-Host "  3) @biglexjtema" -ForegroundColor Gray
-    Write-Host "  4) @biglexlive" -ForegroundColor Gray
-    Write-Host "  5) @biglexpe" -ForegroundColor Gray
-    
-    $canalOption = Read-Host "`nOpción"
-    
-    $canales = @{
-        "1" = "@biglexj"
-        "2" = "@ely-vtuber"
-        "3" = "@biglexjtema"
-        "4" = "@biglexlive"
-        "5" = "@biglexpe"
-    }
-    
-    $canal = $canales[$canalOption]
-    
-    if (-not $canal) {
-        Write-Host "❌ Opción inválida" -ForegroundColor Red
-        return
-    }
-    
-    # Paso 2: Tipo de video
-    Write-Host "`n🎥 Tipo de video:" -ForegroundColor Yellow
-    Write-Host "  1) Video normal" -ForegroundColor Gray
-    Write-Host "  2) Short" -ForegroundColor Gray
-    
-    $tipoOption = Read-Host "`nOpción"
-    
-    $basePath = "D:\Vídeos\DaVinci Resolve\$canal"
-    
-    if ($tipoOption -eq "2") {
-        $basePath = "$basePath\Shorts"
-    }
-    
-    # Verificar que existe la carpeta base
-    if (-not (Test-Path $basePath)) {
-        Write-Host "❌ La carpeta del canal no existe: $basePath" -ForegroundColor Red
-        return
-    }
-    
-    # Paso 3: Detectar último número
-    $folders = Get-ChildItem -Path $basePath -Directory | Where-Object { $_.Name -match '^\d+\.' }
-    
-    $lastNumber = 0
-    foreach ($folder in $folders) {
-        if ($folder.Name -match '^(\d+)\.') {
-            $num = [int]$matches[1]
-            if ($num -gt $lastNumber) {
-                $lastNumber = $num
-            }
-        }
-    }
-    
-    $newNumber = $lastNumber + 1
-    
-    Write-Host "`n📝 Número asignado: $newNumber" -ForegroundColor Green
-    
-    # Paso 4: Pedir título
-    $titulo = Read-Host "`n📌 Título del video"
-    
-    if ([string]::IsNullOrWhiteSpace($titulo)) {
-        Write-Host "❌ El título no puede estar vacío" -ForegroundColor Red
-        return
-    }
-    
-    # Paso 5: Crear estructura
-    $projectPath = "$basePath\$newNumber. $titulo"
-    
-    try {
-        New-Item -ItemType Directory -Path $projectPath -Force | Out-Null
-        New-Item -ItemType Directory -Path "$projectPath\Imágenes" -Force | Out-Null
-        New-Item -ItemType Directory -Path "$projectPath\Videos" -Force | Out-Null
-        New-Item -ItemType Directory -Path "$projectPath\Audio" -Force | Out-Null
-        
-        Write-Host "`n✅ ¡Proyecto creado exitosamente!" -ForegroundColor Green
-        Write-Host "📁 Ruta: $projectPath" -ForegroundColor Cyan
-        Write-Host "`n📂 Estructura creada:" -ForegroundColor Yellow
-        Write-Host "  ├── Imágenes\" -ForegroundColor Gray
-        Write-Host "  ├── Videos\" -ForegroundColor Gray
-        Write-Host "  └── Audio\" -ForegroundColor Gray
-        
-    } catch {
-        Write-Host "`n❌ Error al crear el proyecto: $_" -ForegroundColor Red
-    }
-}
+# --- PRODUCCIÓN ---
+function new-project { python "$Drive\Proyectos\biglexj\Scripts\creacion\new_project.py" @args }
 
 # ===========================
 # 🎨 UTILIDADES CREATIVAS
@@ -439,7 +357,7 @@ function color-palette {
 
 # Acceso rápido a música de fondo
 function bgm {
-    $bgmPath = "D:\Música\IA Sounds\Instrumental 2"
+    $bgmPath = "$Drive\Música\IA Sounds\Instrumental 2"
     if (Test-Path $bgmPath) {
         Start-Process explorer.exe $bgmPath
         Write-Host "🎵 Biblioteca de música de fondo abierta" -ForegroundColor Cyan
@@ -533,10 +451,17 @@ function Show-Help {
     Write-Host "  gc 'mensaje' → Hacer commit con mensaje" -ForegroundColor Gray
     Write-Host "  gp           → Subir cambios al repositorio remoto" -ForegroundColor Gray
     Write-Host "  gpl          → Descargar cambios del repositorio remoto" -ForegroundColor Gray
+    Write-Host "  bj-sync      → Sincronizar repositorio (pull, add, commit, push)" -ForegroundColor Gray
     Write-Host "  dev          → Ejecutar modo desarrollo (bun run dev)" -ForegroundColor Gray
     Write-Host "  build        → Compilar proyecto (bun run build)" -ForegroundColor Gray
-    Write-Host "  clonar       → Clonar estructura de proyecto Python" -ForegroundColor Gray
-    Write-Host "  renombrar    → Renombrar archivos y carpetas masivamente" -ForegroundColor Gray
+
+    Write-Host "`n📌  SCRIPTS" -ForegroundColor Yellow
+    Write-Host "  clonar-est   → Clonar estructura (solo carpetas)" -ForegroundColor Gray
+    Write-Host "  crear-sub    → CrearAssets/Proyecto en subcarpetas" -ForegroundColor Gray
+    Write-Host "  renombrar-it → Renombrado masivo inteligente" -ForegroundColor Gray
+    Write-Host "  sfx-gen      → Generar estructura para SFX" -ForegroundColor Gray
+    Write-Host "  wav2flac     → Convertir archivos WAV a FLAC" -ForegroundColor Gray
+    Write-Host "  undo-org     → Deshacer cambios de organización" -ForegroundColor Gray
     
     Write-Host "`n🎬 PRODUCCIÓN DE CONTENIDO" -ForegroundColor Yellow
     Write-Host "  new-project  → Crear estructura de carpetas para nuevo video" -ForegroundColor Gray
@@ -576,7 +501,7 @@ function Show-Aliases {
     Write-Host "  bjass, bjdav, bjyt, bjmarca, bgm" -ForegroundColor Gray
     
     Write-Host "🛠️  DESARROLLO" -ForegroundColor Yellow
-    Write-Host "  gs, ga, gc, gp, gpl, dev, build, start, install, clonar, renombrar" -ForegroundColor Gray
+    Write-Host "  gs, ga, gc, gp, gpl, bj-sync, dev, build, start, install, clonar, renombrar" -ForegroundColor Gray
     
     Write-Host "`n🎬 PRODUCCIÓN" -ForegroundColor Yellow
     Write-Host "  new-project" -ForegroundColor Gray
@@ -601,24 +526,36 @@ New-Alias -Name "help" -Value "Show-Help"
 New-Alias -Name "aliases" -Value "Show-Aliases"
 
 # ===========================
-# 📁 SCRIPTS
+# 📁 SCRIPTS UTILITY
 # ===========================
 
-function Setup-ScreamingArch {
-    D:\Proyectos\biglexj\Scripts\Estructure\setup-screaming-architecture.ps1
-}
+# --- Organización ---
+function Clonar-Estructura { python "$Drive\Proyectos\biglexj\Scripts\organizacion\clonar_estructura.py" @args }
+function Crear-Subcarpetas { python "$Drive\Proyectos\biglexj\Scripts\organizacion\crear_subcarpetas_estandar.py" @args }
+function Undo-Org { python "$Drive\Proyectos\biglexj\Scripts\organizacion\undo_organization.py" @args }
 
-function Clonar-Estructura {
-    python D:\Proyectos\biglexj\Scripts\clonar_estructura.py @args
-}
+# --- Gestión ---
+function Renombrar-It { python "$Drive\Proyectos\biglexj\Scripts\gestion\renombrar_archivos_carpetas.py" @args }
 
-function Renombrar-Archivos {
-    python D:\Proyectos\biglexj\Scripts\renombrar_archivos_carpetas.py @args
-}
+# --- Multimedia ---
+function SFX-Gen { powershell "$Drive\Proyectos\biglexj\Scripts\multimedia\estructura_sfx.ps1" @args }
+function Wav2Flac { python "$Drive\Proyectos\biglexj\Scripts\multimedia\wav_a_flac.py" @args }
 
-New-Alias -Name "screaming" -Value Setup-ScreamingArch
-New-Alias -Name "clonar" -Value Clonar-Estructura
-New-Alias -Name "renombrar" -Value Renombrar-Archivos
+# --- Antiguos / Otros ---
+function Setup-ScreamingArch { & "$Drive\Proyectos\biglexj\Scripts\Estructure\setup-screaming-architecture.ps1" }
+
+# --- ALIASES ---
+New-Alias -Name "clonar-est" -Value Clonar-Estructura
+New-Alias -Name "crear-sub"  -Value Crear-Subcarpetas
+New-Alias -Name "undo-org"   -Value Undo-Org
+New-Alias -Name "renombrar-it" -Value Renombrar-It
+New-Alias -Name "sfx-gen"    -Value SFX-Gen
+New-Alias -Name "wav2flac"   -Value Wav2Flac
+New-Alias -Name "screaming"  -Value Setup-ScreamingArch
+
+# Compatibilidad con nombres antiguos
+New-Alias -Name "clonar"     -Value Clonar-Estructura
+New-Alias -Name "renombrar"  -Value Renombrar-It
 
 # ===========================
 # 🌟 Mensaje de bienvenida final
@@ -627,6 +564,10 @@ Write-Host "`n🎉 ¡Terminal de Biglex J cargado exitosamente!" -ForegroundColo
 Write-Host "💡 Escribe 'help' para ver todos los comandos disponibles" -ForegroundColor Blue
 Write-host "📌 Escribe 'aliases' para ver solo la lista de comandos" -ForegroundColor Cyan
 Write-Host "🚀 ¡A programar y crear contenido épico!" -ForegroundColor Magenta
+
+$ProfileEndTime = [DateTime]::Now
+$ProfileDuration = ($ProfileEndTime - $ProfileStartTime).TotalMilliseconds
+Write-Host ("`n🚀 Perfil cargado en {0:N0} ms" -f $ProfileDuration) -ForegroundColor Gray
 
 #f45873b3-b655-43a6-b217-97c00aa0db58 PowerToys CommandNotFound module
 
