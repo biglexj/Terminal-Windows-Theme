@@ -3,6 +3,9 @@
 # ===========================
 $ProfileStartTime = [DateTime]::Now
 
+# --- Oh My Posh theme path ---
+$env:POSH_THEMES_PATH = "D:\Assets\Themes\2. Windows\Terminal Windows\Themes"
+
 # --- Oh My Posh (tema personalizado) ---
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\biglexj.omp.json" | Invoke-Expression
 #oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\night-owl.omp.json" | Invoke-Expression
@@ -207,6 +210,7 @@ function install { bun install }
 # ===========================
 function start-aurora { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_services.ps1" }
 function stop-aurora { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_services.ps1" }
+function check-aurora { bun "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\check-services.ts" }
 function backend { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
 function ely-intelligence { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
 function live { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
@@ -423,7 +427,7 @@ function update-profile {
 }
 
 function edit-profile {
-    antigravity $PROFILE
+    code $PROFILE
 }
 
 # ===========================
@@ -471,6 +475,7 @@ function Show-Help {
     Write-Host "  ely-intelligence → Iniciar servidor principal de Ely" -ForegroundColor Gray
     Write-Host "  live             → Iniciar sistema de Live Stream" -ForegroundColor Gray
     Write-Host "  vozely           → Iniciar motor de voz con IA (XTTS)" -ForegroundColor Gray
+    Write-Host "  check-aurora     → Verificar estado de los servicios (puertos)" -ForegroundColor Gray
     Write-Host "  add-video        → Añadir video al sistema de publicación web" -ForegroundColor Gray
     Write-Host "  add-karaoke      → Añadir karaoke (detecta género automáticamente)" -ForegroundColor Gray
     
@@ -507,7 +512,7 @@ function Show-Aliases {
     Write-Host "  new-project" -ForegroundColor Gray
     
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
-    Write-Host "  ely-intelligence, live, vozely, add-video, add-karaoke" -ForegroundColor Gray
+    Write-Host "  ely-intelligence, live, vozely, check-aurora, add-video, add-karaoke" -ForegroundColor Gray
     
     Write-Host "`n🎨 CREATIVIDAD" -ForegroundColor Yellow
     Write-Host "  color-palette" -ForegroundColor Gray
