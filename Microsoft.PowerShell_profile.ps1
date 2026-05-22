@@ -490,7 +490,8 @@ function Show-Help {
     Write-Host "  system-info   → Mostrar información del sistema (fastfetch)" -ForegroundColor Gray
     Write-Host "  check-space   → Ver espacio disponible en discos" -ForegroundColor Gray
     Write-Host "  update-profile→ Recargar configuración de PowerShell" -ForegroundColor Gray
-    Write-Host "  edit-profile  → Editar configuración en Antigravity" -ForegroundColor Gray
+    Write-Host "  edit-profile  → Editar configuracion en Antigravity" -ForegroundColor Gray
+    Write-Host "  server        → Conectar al servidor SSH" -ForegroundColor Gray
     
     Write-Host "`n💡 Tip: Escribe 'aliases' para ver solo la lista de comandos`n" -ForegroundColor Cyan
 }
@@ -521,14 +522,14 @@ function Show-Aliases {
     Write-Host "  open-biglexj, open-youtube" -ForegroundColor Gray
     
     Write-Host "`n⚙️  SISTEMA" -ForegroundColor Yellow
-    Write-Host "  system-info, check-space, update-profile, edit-profile" -ForegroundColor Gray                 
+    Write-Host "  system-info, check-space, update-profile, edit-profile, server" -ForegroundColor Gray                 
     
     Write-Host "`n💡 Tip: Escribe 'help' para ver descripciones detalladas`n" -ForegroundColor Cyan
 }
 
 # Alias para los comandos de ayuda
-New-Alias -Name "help" -Value "Show-Help"
-New-Alias -Name "aliases" -Value "Show-Aliases"
+Set-Alias -Name "help" -Value "Show-Help"
+Set-Alias -Name "aliases" -Value "Show-Aliases"
 
 # ===========================
 # 📁 SCRIPTS UTILITY
@@ -550,17 +551,17 @@ function Wav2Flac { python "$Drive\Proyectos\biglexj\Scripts\multimedia\wav_a_fl
 function Setup-ScreamingArch { & "$Drive\Proyectos\biglexj\Scripts\Estructure\setup-screaming-architecture.ps1" }
 
 # --- ALIASES ---
-New-Alias -Name "clonar-est" -Value Clonar-Estructura
-New-Alias -Name "crear-sub"  -Value Crear-Subcarpetas
-New-Alias -Name "undo-org"   -Value Undo-Org
-New-Alias -Name "renombrar-it" -Value Renombrar-It
-New-Alias -Name "sfx-gen"    -Value SFX-Gen
-New-Alias -Name "wav2flac"   -Value Wav2Flac
-New-Alias -Name "screaming"  -Value Setup-ScreamingArch
+Set-Alias -Name "clonar-est" -Value Clonar-Estructura
+Set-Alias -Name "crear-sub"  -Value Crear-Subcarpetas
+Set-Alias -Name "undo-org"   -Value Undo-Org
+Set-Alias -Name "renombrar-it" -Value Renombrar-It
+Set-Alias -Name "sfx-gen"    -Value SFX-Gen
+Set-Alias -Name "wav2flac"   -Value Wav2Flac
+Set-Alias -Name "screaming"  -Value Setup-ScreamingArch
 
 # Compatibilidad con nombres antiguos
-New-Alias -Name "clonar"     -Value Clonar-Estructura
-New-Alias -Name "renombrar"  -Value Renombrar-It
+Set-Alias -Name "clonar"     -Value Clonar-Estructura
+Set-Alias -Name "renombrar"  -Value Renombrar-It
 
 # ===========================
 # 🌟 Mensaje de bienvenida final
@@ -578,3 +579,14 @@ Write-Host ("`n🚀 Perfil cargado en {0:N0} ms" -f $ProfileDuration) -Foregroun
 
 Import-Module -Name Microsoft.WinGet.CommandNotFound
 #f45873b3-b655-43a6-b217-97c00aa0db58
+
+# ===========================
+# ðŸš€ [SERVERS] ConexiÃ³n Servidor
+# ===========================
+function server {
+    if ($args.Count -eq 0) {
+        ssh -t biglexj@192.168.1.251
+    } else {
+        ssh -t biglexj@192.168.1.251 $args
+    }
+}
