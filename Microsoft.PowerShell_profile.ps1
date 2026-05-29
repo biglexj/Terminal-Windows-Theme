@@ -206,24 +206,146 @@ function start { bun start }
 function install { bun install }
 
 # ===========================
-# 🤖 Ely Intelligence & Live Stream
+# ?? Aurora - Comandos del Servidor
 # ===========================
-function start-aurora { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_services.ps1" }
-function stop-aurora { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_services.ps1" }
-function check-aurora { bun "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\check-services.ts" }
-function backend { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
-function ely-intelligence { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
-function live { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
-function vozely { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
-function voice-ely { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_voice_pipeline.ps1" }
-function add-video { 
-    param([string]$url, [string]$title, [string]$description, [string]$tags)
-    & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "video" -Title $title -Description $description
+
+$AuroraServer  = "biglexj@192.168.1.251"
+$AuroraScripts = "/var/www/aurora-blog/scripts/server"
+
+# --- Windows (local) ---
+function aurora-start   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_services.ps1" }
+function aurora-stop    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_services.ps1" }
+function aurora-check   { bun "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\check-services.ts" }
+function aurora-backend { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
+function aurora-ely     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
+function aurora-live    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
+function aurora-voz     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
+function aurora-voice   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_voice_pipeline.ps1" }
+
+# --- Linux (remoto via SSH) ---
+function aurora-check-linux {
+    $ip = "192.168.1.251"
+    $services = @(
+        # Familia 4000 - Frontend
+        @{ name = "Frontend (Astro)    "; port = 4321;  label = "4000 · Dev" },
+        # Familia 5000 - Core API
+        @{ name = "Aurora Core API C#  "; port = 5000;  label = "5000 · Core" },
+        @{ name = "Live API C#         "; port = 5050;  label = "5000 · Core" },
+        # Familia 6000 - Voz
+        @{ name = "VozEly Python XTTS  "; port = 6000;  label = "6000 · Voz" },
+        @{ name = "Voice Companion C#  "; port = 6080;  label = "6000 · Voz" },
+        # Familia 7000 - AI
+        @{ name = "Ely Intelligence    "; port = 7000;  label = "7000 · AI" },
+        # Familia 8000 - Coolify/Traefik
+        @{ name = "Coolify Dashboard   "; port = 8000;  label = "8000 · Infra" },
+        @{ name = "Traefik Proxy      "; port = 8080;  label = "8000 · Infra" },
+        # Familia 9000 - Storage
+        @{ name = "MinIO S3 API        "; port = 9000;  label = "9000 · Storage" },
+        @{ name = "MinIO Web Console   "; port = 9001;  label = "9000 · Storage" },
+        # Infra DevOps
+        @{ name = "Portainer           "; port = 9443;  label = "Infra" },
+        @{ name = "Grafana             "; port = 3000;  label = "Infra" }
+    )
+    Write-Host ""
+    Write-Host "[Linux] Monitoreo Aurora — $ip" -ForegroundColor Cyan
+    Write-Host ("─" * 62) -ForegroundColor DarkGray
+    foreach ($svc in $services) {
+        $tcp = New-Object System.Net.Sockets.TcpClient
+        $active = $false
+        try { $tcp.Connect($ip, $svc.port); $active = $tcp.Connected } catch {} finally { $tcp.Close() }
+        $label = "[$($svc.label)]".PadRight(18)
+        if ($active) {
+            Write-Host "  " -NoNewline
+            Write-Host "●" -ForegroundColor Green -NoNewline
+            Write-Host " $($svc.name)" -NoNewline
+            Write-Host $label -ForegroundColor DarkGray -NoNewline
+            Write-Host "[ACTIVO] " -ForegroundColor Green -NoNewline
+            Write-Host "→ :$($svc.port)"
+        } else {
+            Write-Host "  " -NoNewline
+            Write-Host "○" -ForegroundColor DarkGray -NoNewline
+            Write-Host " $($svc.name)" -NoNewline
+            Write-Host $label -ForegroundColor DarkGray -NoNewline
+            Write-Host "[offline] → :$($svc.port)" -ForegroundColor DarkGray
+        }
+    }
+    Write-Host ("─" * 62) -ForegroundColor DarkGray
+    Write-Host ""
+    Write-Host "  ⚠  Si Coolify corre en :8000 choca con VozEly — moverlo a :8443" -ForegroundColor Yellow
+    Write-Host ""
 }
-function add-karaoke { 
-    param([string]$url, [string]$title, [string]$description, [string]$tags)
-    & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\add-video.ps1" -Url $url -Type "karaoke" -Title $title -Description $description -Tags $tags
+function aurora-start-linux { ssh -t $AuroraServer "bash $AuroraScripts/aurora-start.sh $args" }
+function aurora-stop-linux  { ssh -t $AuroraServer "bash $AuroraScripts/aurora-stop.sh $args" }
+function aurora-pull-linux  { ssh -t $AuroraServer "bash $AuroraScripts/aurora-pull.sh $args" }
+function aurora-ssh         { ssh -t $AuroraServer }
+
+function aurora-deploy {
+    param([string]$message = "")
+
+    # Si no pasaron mensaje, pedir uno
+    if (-not $message) {
+        $message = Read-Host "`n📝 Commit message"
+        if (-not $message) {
+            Write-Host "❌ Commit message vacío. Operación cancelada." -ForegroundColor Red
+            return
+        }
+    }
+
+    $AuroraRoot = "$Drive\Proyectos\biglexj\Aurora---Blog"
+
+    Write-Host ""
+    Write-Host "🚀 Aurora Deploy" -ForegroundColor Cyan
+    Write-Host ("─" * 45) -ForegroundColor DarkGray
+    Write-Host "  📁 $AuroraRoot" -ForegroundColor DarkGray
+
+    Push-Location $AuroraRoot
+
+    try {
+        # 1. Stage
+        Write-Host "  [1/4] Staging todos los cambios..." -ForegroundColor Gray
+        git add .
+
+        # 2. Commit
+        Write-Host "  [2/4] Commit: $message" -ForegroundColor Gray
+        $commitResult = git commit -m $message 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "  ⚠  Nada que commitear o ya estaba commiteado." -ForegroundColor Yellow
+        } else {
+            Write-Host "  ✅ Commit creado" -ForegroundColor Green
+        }
+
+        # 3. Push
+        Write-Host "  [3/4] Pushing a GitHub..." -ForegroundColor Gray
+        git push
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "  ❌ Push fallido. Revisa la conexión o conflictos." -ForegroundColor Red
+            return
+        }
+        Write-Host "  ✅ Push exitoso" -ForegroundColor Green
+
+        # 4. Pull en servidor Linux
+        Write-Host "  [4/4] Pull en servidor Linux ($AuroraServer)..." -ForegroundColor Gray
+        ssh -t $AuroraServer "cd /var/www/aurora-blog && git pull"
+
+        Write-Host ("─" * 45) -ForegroundColor DarkGray
+        Write-Host "  ✅ Deploy completo`n" -ForegroundColor Green
+    }
+    finally {
+        Pop-Location
+    }
 }
+
+# --- Aliases de compatibilidad ---
+Set-Alias -Name start-aurora     -Value aurora-start     -Option AllScope
+Set-Alias -Name stop-aurora      -Value aurora-stop      -Option AllScope
+Set-Alias -Name check-aurora     -Value aurora-check     -Option AllScope
+Set-Alias -Name backend          -Value aurora-backend   -Option AllScope
+Set-Alias -Name ely-intelligence -Value aurora-ely       -Option AllScope
+Set-Alias -Name live             -Value aurora-live      -Option AllScope
+Set-Alias -Name vozely           -Value aurora-voz       -Option AllScope
+Set-Alias -Name voice-ely        -Value aurora-voice     -Option AllScope
+Set-Alias -Name server           -Value aurora-ssh       -Option AllScope
+
 
 # --- PRODUCCIÓN ---
 function new-project { python "$Drive\Proyectos\biglexj\Scripts\creacion\new_project.py" @args }
@@ -393,31 +515,13 @@ function system-info {
 }
 
 function check-space {
-    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Yellow
-    Write-Host "║              💾 ESPACIO EN DISCOS                              ║" -ForegroundColor Yellow
-    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Yellow
-    
-    $drives = Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used -ne $null -and $_.Name -match '^[C-Z]$' }
-    
-    foreach ($drive in $drives) {
-        $name = $drive.Name
-        $used = [math]::Round($drive.Used / 1GB, 2)
-        $free = [math]::Round($drive.Free / 1GB, 2)
-        $total = $used + $free
-        $percentUsed = [math]::Round(($used / $total) * 100, 1)
-        
-        # Barra de progreso
-        $barLength = 40
-        $filledLength = [math]::Round(($percentUsed / 100) * $barLength)
-        $bar = "█" * $filledLength + "░" * ($barLength - $filledLength)
-        
-        # Color según porcentaje
-        $color = if ($percentUsed -gt 90) { "Red" } elseif ($percentUsed -gt 70) { "Yellow" } else { "Green" }
-        
-        Write-Host "Disco $name`:\" -ForegroundColor Cyan -NoNewline
-        Write-Host " [$bar] " -ForegroundColor $color -NoNewline
-        Write-Host "$percentUsed% usado" -ForegroundColor White
-        Write-Host "  $used GB / $total GB ($free GB libres)`n" -ForegroundColor Gray
+    Write-Host "" -ForegroundColor Yellow
+    Get-PSDrive -PSProvider FileSystem | Where-Object { $_.Used -ne $null } | ForEach-Object {
+        $total = [math]::Round($_.Used / 1GB + $_.Free / 1GB, 1)
+        $used  = [math]::Round($_.Used / 1GB, 1)
+        $pct   = if ($total -gt 0) { [math]::Round($used / $total * 100) } else { 0 }
+        $bar   = "#" * [math]::Floor($pct / 5) + "-" * (20 - [math]::Floor($pct / 5))
+        Write-Host "  $($_.Name):  [$bar] $used/$total GB ($pct%)"
     }
 }
 
@@ -428,6 +532,210 @@ function update-profile {
 
 function edit-profile {
     code $PROFILE
+}
+
+function ahk {
+    code "D:\Windows\AutoHotKey\biglexj.ahk"
+}
+
+function ahk-reload {
+    if (Test-Path "D:\Windows\AutoHotKey\biglexj.ahk") {
+        Start-Process "D:\Windows\AutoHotKey\biglexj.ahk"
+        Write-Host "🔄 Configuración de AutoHotkey recargada" -ForegroundColor Green
+    } else {
+        Write-Host "❌ No se encontró el archivo AHK" -ForegroundColor Red
+    }
+}
+
+function ahk-status {
+    $proc = Get-Process -Name "AutoHotkey*" -ErrorAction SilentlyContinue
+    if ($proc) {
+        Write-Host "✅ AutoHotkey está activo (PID: $($proc.Id))" -ForegroundColor Green
+    } else {
+        Write-Host "❌ AutoHotkey no está en ejecución" -ForegroundColor Red
+    }
+}
+
+function ahk-alias {
+    $ahkPath = "D:\Windows\AutoHotKey\biglexj.ahk"
+    if (!(Test-Path $ahkPath)) { Write-Host "No se encontro el archivo AHK" -ForegroundColor Red; return }
+
+    Write-Host ""
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host "    ATAJOS AUTOHOTKEY - BIGLEX J" -ForegroundColor Cyan
+    Write-Host "========================================" -ForegroundColor Cyan
+    Write-Host ""
+
+    $lines = Get-Content $ahkPath
+    $currentSection = ""
+
+    foreach ($line in $lines) {
+        $line = $line.Trim()
+
+        if ($line -match '^;\s*={3,}$') { continue }
+        if ($line -match '^;\s*(ATAJOS PARA APLICACIONES|ATAJOS DE CARPETAS|CONTROLES MULTIMEDIA|EXPANSION DE TEXTO|EXPANSION PARA STREAMING|POWER USER|CHAT Y STREAMING|UTILIDADES DE DESARROLLO|SOCIAL MEDIA|ATAJOS AURORA)') {
+            $currentSection = $line -replace '^;\s*', ''
+            Write-Host ""
+            Write-Host ">> $currentSection" -ForegroundColor Yellow
+            Write-Host ("--" * 30) -ForegroundColor DarkGray
+        }
+
+        if ($line -match '^([#!^<>+*]*[a-zA-Z0-9_]+)::(.+)') {
+            $key  = $Matches[1]
+            $rest = $Matches[2].Trim()
+            $desc = ""
+            if ($rest -match ';.*?-\s*(.+)$')  { $desc = $Matches[1].Trim() }
+            elseif ($rest -match ';(.+)$')        { $desc = $Matches[1].Trim() }
+
+            $mods = @()
+            if ($key -match '\^') { $mods += "Ctrl" }
+            if ($key -match '!')  { $mods += "Alt" }
+            if ($key -match '\+') { $mods += "Shift" }
+            if ($key -match '#')  { $mods += "Win" }
+            $baseKey = if ($key -match '[a-zA-Z0-9_]+$') { $Matches[0].ToUpper() } else { [string]$key[-1] }
+            $keyDisplay = if ($mods.Count -gt 0) { ($mods -join " + ") + " + " + $baseKey } else { $baseKey }
+
+            if ($desc) {
+                Write-Host ("  " + $keyDisplay.PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> $desc" -ForegroundColor White
+            }
+        }
+
+        if ($line -match '^::(\w+)::(.+)$') {
+            $trigger     = $Matches[1]
+            $replacement = $Matches[2]
+            if ($replacement -match 'SendText\("(.+)"\)') { $replacement = $Matches[1] -replace "``n", " " }
+            if ($replacement.Length -gt 45) { $replacement = $replacement.Substring(0, 42) + "..." }
+            Write-Host ("  ::" + $trigger + "::").PadRight(22) -ForegroundColor White -NoNewline
+            Write-Host "-> $replacement" -ForegroundColor DarkGray
+        }
+    }
+    Write-Host ""
+    Write-Host "  ahk = editar | ahk-reload = recargar" -ForegroundColor Cyan
+    Write-Host ""
+}
+
+function ahk-shortcuts { ahk-alias }
+
+# ===========================
+# 📦 APLICACIONES INSTALADAS
+# ===========================
+
+function apps {
+    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "║              📦 APLICACIONES INSTALADAS (winget)               ║" -ForegroundColor Cyan
+    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
+    winget list --source winget --disable-interactivity
+}
+
+function apps-search {
+    param([string]$query)
+    if ($query) {
+        winget search $query --source winget
+    } else {
+        Write-Host "Uso: apps-search <nombre>" -ForegroundColor Yellow
+    }
+}
+
+function apps-upgrade {
+    Write-Host "🔄 Buscando actualizaciones disponibles..." -ForegroundColor Cyan
+    winget upgrade --source winget
+}
+
+function install {
+    param([string]$app)
+    if ($app) {
+        winget install $app
+    } else {
+        Write-Host "Uso: install <nombre-app>" -ForegroundColor Yellow
+    }
+}
+
+# ===========================
+# 🌐 PUERTOS Y SERVICIOS
+# ===========================
+
+function ports {
+    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
+    Write-Host "║              🌐 PUERTOS EN USO                                ║" -ForegroundColor Magenta
+    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Magenta
+    netstat -ano | Select-String "LISTENING" | ForEach-Object {
+        $line = $_ -split '\s+'
+        $port = $line[1] -split ':' | Select-Object -Last 1
+        $pid = $line[-1]
+        $proc = Get-Process -Id $pid -ErrorAction SilentlyContinue | Select-Object -ExpandProperty ProcessName
+        [PSCustomObject]@{
+            Puerto = $port
+            PID = $pid
+            Proceso = $proc
+        }
+    } | Sort-Object { [int]$_.Puerto } | Format-Table -AutoSize
+}
+
+function services {
+    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+    Write-Host "║              ⚙️ SERVICIOS DEL SISTEMA                         ║" -ForegroundColor Green
+    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
+    Get-Service | Where-Object {$_.Status -eq "Running"} | Select-Object Name, DisplayName, Status | Sort-Object Name | Format-Table -AutoSize
+}
+
+function my-ip {
+    Write-Host "`n🌐 Tu dirección IP pública:" -ForegroundColor Cyan
+    (Invoke-WebRequest -Uri "https://api.ipify.org" -UseBasicParsing).Content
+    Write-Host "`n🏠 IPs locales:" -ForegroundColor Yellow
+    Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.IPAddress -ne "127.0.0.1"} | Select-Object InterfaceAlias, IPAddress | Format-Table -AutoSize
+}
+
+# ===========================
+# 🛤️ VARIABLES DE ENTORNO / PATH
+# ===========================
+
+function path {
+    # Abrir editor de variables de entorno del usuario
+    rundll32.exe sysdm.cpl,EditEnvironmentVariables
+    Write-Host "📂 Abriendo variables de entorno del usuario..." -ForegroundColor Cyan
+}
+
+function path-admin {
+    # Abrir editor de variables de entorno del sistema (requiere admin)
+    Start-Process "SystemPropertiesAdvanced.exe" -Verb RunAs
+    Write-Host "🔐 Abriendo variables de entorno del sistema (Admin)..." -ForegroundColor Yellow
+}
+
+function path-show {
+    # Mostrar PATH actual dividido por secciones
+    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+    Write-Host "║              🛤️ VARIABLES DE ENTORNO (PATH)                   ║" -ForegroundColor Green
+    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
+    
+    Write-Host "👤 PATH DEL USUARIO:" -ForegroundColor Yellow
+    $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
+    if ($userPath) {
+        $userPath -split ";" | Where-Object { $_ } | ForEach-Object {
+            Write-Host "  • $_" -ForegroundColor Gray
+        }
+    }
+    
+    Write-Host "`n🔐 PATH DEL SISTEMA:" -ForegroundColor Yellow
+    $sysPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+    if ($sysPath) {
+        $sysPath -split ";" | Where-Object { $_ } | ForEach-Object {
+            Write-Host "  • $_" -ForegroundColor DarkGray
+        }
+    }
+}
+
+function env-show {
+    # Mostrar todas las variables de entorno
+    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
+    Write-Host "║              🌐 VARIABLES DE ENTORNO                          ║" -ForegroundColor Magenta
+    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Magenta
+    
+    Write-Host "👤 VARIABLES DEL USUARIO:" -ForegroundColor Yellow
+    [Environment]::GetEnvironmentVariables("User") | Format-Table -AutoSize
+    
+    Write-Host "`n🔐 VARIABLES DEL SISTEMA:" -ForegroundColor Yellow
+    [Environment]::GetEnvironmentVariables("Machine") | Format-Table -AutoSize
 }
 
 # ===========================
@@ -444,10 +752,19 @@ function Show-Help {
     Write-Host "  ..           → Subir un directorio" -ForegroundColor Gray
     Write-Host "  ...          → Subir dos directorios" -ForegroundColor Gray
     Write-Host "  bjpro        → Ir a D:\Proyectos" -ForegroundColor Gray
-    Write-Host "  bjdav        → Ir a carpeta de DaVinci Resolve" -ForegroundColor Gray
-    Write-Host "  bjyt         → Ir a carpeta de Miniaturas" -ForegroundColor Gray
+    Write-Host "  bjpros       → Ir a D:\Proyectos\biglexj" -ForegroundColor Gray
+    Write-Host "  bjdes        → Ir a D:\Descargas" -ForegroundColor Gray
+    Write-Host "  bjdoc        → Ir a D:\Documentos" -ForegroundColor Gray
+    Write-Host "  bjimg        → Ir a D:\Imágenes" -ForegroundColor Gray
+    Write-Host "  bjmus        → Ir a D:\Música" -ForegroundColor Gray
+    Write-Host "  bjvid        → Ir a D:\Vídeos" -ForegroundColor Gray
+    Write-Host "  bjass        → Ir a D:\Assets" -ForegroundColor Gray
+    Write-Host "  bjdav        → Ir a D:\Vídeos\DaVinci Resolve" -ForegroundColor Gray
+    Write-Host "  bjyt         → Ir a D:\Imágenes\YouTube" -ForegroundColor Gray
+    Write-Host "  bjmarca      → Ir a D:\Imágenes\Proyectos\Marca" -ForegroundColor Gray
+    Write-Host "  docs         → Abrir la biblioteca de documentación" -ForegroundColor Gray
+    Write-Host "  aurora       → Ir al proyecto Aurora Blog" -ForegroundColor Gray
     Write-Host "  bgm          → Abrir biblioteca de música de fondo" -ForegroundColor Gray
-    Write-Host "  docs         → Abrir la biblioteas de documentación" -ForegroundColor Gray
     
     Write-Host "`n🛠️  DESARROLLO" -ForegroundColor Yellow
     Write-Host "  gs           → Mostrar estado del repositorio Git" -ForegroundColor Gray
@@ -458,26 +775,33 @@ function Show-Help {
     Write-Host "  bj-sync      → Sincronizar repositorio (pull, add, commit, push)" -ForegroundColor Gray
     Write-Host "  dev          → Ejecutar modo desarrollo (bun run dev)" -ForegroundColor Gray
     Write-Host "  build        → Compilar proyecto (bun run build)" -ForegroundColor Gray
+    Write-Host "  start        → Iniciar proyecto (bun start)" -ForegroundColor Gray
+    Write-Host "  install      → Instalar dependencias (bun install)" -ForegroundColor Gray
 
     Write-Host "`n📌  SCRIPTS" -ForegroundColor Yellow
     Write-Host "  clonar-est   → Clonar estructura (solo carpetas)" -ForegroundColor Gray
-    Write-Host "  crear-sub    → CrearAssets/Proyecto en subcarpetas" -ForegroundColor Gray
+    Write-Host "  crear-sub    → Crear Assets/Proyecto en subcarpetas" -ForegroundColor Gray
     Write-Host "  renombrar-it → Renombrado masivo inteligente" -ForegroundColor Gray
     Write-Host "  sfx-gen      → Generar estructura para SFX" -ForegroundColor Gray
     Write-Host "  wav2flac     → Convertir archivos WAV a FLAC" -ForegroundColor Gray
     Write-Host "  undo-org     → Deshacer cambios de organización" -ForegroundColor Gray
+    Write-Host "  screaming    → Setup Screaming Architecture" -ForegroundColor Gray
+    Write-Host "  clonar       → Alias de clonar-est" -ForegroundColor Gray
+    Write-Host "  renombrar    → Alias de renombrar-it" -ForegroundColor Gray
     
     Write-Host "`n🎬 PRODUCCIÓN DE CONTENIDO" -ForegroundColor Yellow
     Write-Host "  new-project  → Crear estructura de carpetas para nuevo video" -ForegroundColor Gray
     Write-Host "               (Detecta canal, tipo y numeración automática)" -ForegroundColor DarkGray
     
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
+    Write-Host "  start-aurora    → Iniciar servicios de Aurora" -ForegroundColor Gray
+    Write-Host "  stop-aurora     → Detener servicios de Aurora" -ForegroundColor Gray
+    Write-Host "  check-aurora    → Verificar estado de los servicios (puertos)" -ForegroundColor Gray
+    Write-Host "  backend         → Iniciar backend C#" -ForegroundColor Gray
     Write-Host "  ely-intelligence → Iniciar servidor principal de Ely" -ForegroundColor Gray
-    Write-Host "  live             → Iniciar sistema de Live Stream" -ForegroundColor Gray
-    Write-Host "  vozely           → Iniciar motor de voz con IA (XTTS)" -ForegroundColor Gray
-    Write-Host "  check-aurora     → Verificar estado de los servicios (puertos)" -ForegroundColor Gray
-    Write-Host "  add-video        → Añadir video al sistema de publicación web" -ForegroundColor Gray
-    Write-Host "  add-karaoke      → Añadir karaoke (detecta género automáticamente)" -ForegroundColor Gray
+    Write-Host "  live            → Iniciar sistema de Live Stream" -ForegroundColor Gray
+    Write-Host "  vozely          → Iniciar motor de voz con IA (XTTS)" -ForegroundColor Gray
+    Write-Host "  voice-ely       → Iniciar pipeline de voz Ely" -ForegroundColor Gray
     
     Write-Host "`n🎨 UTILIDADES CREATIVAS" -ForegroundColor Yellow
     Write-Host "  color-palette → Mostrar paleta de colores oficial (Biglex J & Ely)" -ForegroundColor Gray
@@ -492,28 +816,28 @@ function Show-Help {
     Write-Host "  update-profile→ Recargar configuración de PowerShell" -ForegroundColor Gray
     Write-Host "  edit-profile  → Editar configuracion en Antigravity" -ForegroundColor Gray
     Write-Host "  server        → Conectar al servidor SSH" -ForegroundColor Gray
+    Write-Host "  ports         → Ver puertos en uso" -ForegroundColor Gray
+    Write-Host "  services      → Ver servicios del sistema activos" -ForegroundColor Gray
+    Write-Host "  my-ip         → Mostrar IP pública y local" -ForegroundColor Gray
     
-    Write-Host "`n💡 Tip: Escribe 'aliases' para ver solo la lista de comandos`n" -ForegroundColor Cyan
-}
-
-# Función de aliases compacta (solo nombres)
-function Show-Aliases {
-    Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
-    Write-Host "║                  🔗 ALIASES DISPONIBLES                        ║" -ForegroundColor Green
-    Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
-    
+    Write-Host "`n🛤️  PATH & ENTORNO" -ForegroundColor Yellow
     Write-Host "📁 NAVEGACIÓN" -ForegroundColor Yellow
-    Write-Host "  .., ..., bjpro, bjpros, bjdes, bjdoc, bjimg, bjmus, bjvid, aurora" -ForegroundColor Gray
-    Write-Host "  bjass, bjdav, bjyt, bjmarca, bgm" -ForegroundColor Gray
+    Write-Host "  .., ..., bjpro, bjpros, bjdes, bjdoc, bjimg, bjmus, bjvid," -ForegroundColor Gray
+    Write-Host "  bjass, bjdav, bjyt, bjmarca, docs, aurora, bgm" -ForegroundColor Gray
     
     Write-Host "🛠️  DESARROLLO" -ForegroundColor Yellow
-    Write-Host "  gs, ga, gc, gp, gpl, bj-sync, dev, build, start, install, clonar, renombrar" -ForegroundColor Gray
+    Write-Host "  gs, ga, gc, gp, gpl, bj-sync, dev, build, start, install" -ForegroundColor Gray
+    
+    Write-Host "`n📌 SCRIPTS" -ForegroundColor Yellow
+    Write-Host "  clonar-est, crear-sub, renombrar-it, sfx-gen, wav2flac," -ForegroundColor Gray
+    Write-Host "  undo-org, screaming, clonar, renombrar" -ForegroundColor Gray
     
     Write-Host "`n🎬 PRODUCCIÓN" -ForegroundColor Yellow
     Write-Host "  new-project" -ForegroundColor Gray
     
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
-    Write-Host "  ely-intelligence, live, vozely, check-aurora, add-video, add-karaoke" -ForegroundColor Gray
+    Write-Host "  start-aurora, stop-aurora, check-aurora, backend," -ForegroundColor Gray
+    Write-Host "  ely-intelligence, live, vozely, voice-ely" -ForegroundColor Gray
     
     Write-Host "`n🎨 CREATIVIDAD" -ForegroundColor Yellow
     Write-Host "  color-palette" -ForegroundColor Gray
@@ -522,13 +846,66 @@ function Show-Aliases {
     Write-Host "  open-biglexj, open-youtube" -ForegroundColor Gray
     
     Write-Host "`n⚙️  SISTEMA" -ForegroundColor Yellow
-    Write-Host "  system-info, check-space, update-profile, edit-profile, server" -ForegroundColor Gray                 
+    Write-Host "  system-info, check-space, update-profile, edit-profile, server," -ForegroundColor Gray
+    Write-Host "  ports, services, my-ip" -ForegroundColor Gray
+    
+    Write-Host "`n🛤️  PATH & ENTORNO" -ForegroundColor Yellow
+    Write-Host "  path, path-admin, path-show, env-show" -ForegroundColor Gray
+    
+    Write-Host "`n🔧 AUTOHOTKEY" -ForegroundColor Yellow
+    Write-Host "  ahk, ahk-reload, ahk-status, ahk-alias, ahk-shortcuts" -ForegroundColor Gray
+    
+    Write-Host "`n📦 APLICACIONES" -ForegroundColor Yellow
+    Write-Host "  apps, apps-search, apps-upgrade, install" -ForegroundColor Gray
     
     Write-Host "`n💡 Tip: Escribe 'help' para ver descripciones detalladas`n" -ForegroundColor Cyan
 }
 
 # Alias para los comandos de ayuda
 Set-Alias -Name "help" -Value "Show-Help"
+function Show-Aliases {
+    Write-Host ""
+    Write-Host "========================================" -ForegroundColor Magenta
+    Write-Host "   COMANDOS CUSTOM - BIGLEX J PROFILE" -ForegroundColor Magenta
+    Write-Host "========================================" -ForegroundColor Magenta
+
+    Write-Host "`n>> NAVEGACION" -ForegroundColor Yellow
+    Write-Host "  .., ..., bjpro, bjpros, bjdes, bjdoc, bjimg, bjmus, bjvid" -ForegroundColor Gray
+    Write-Host "  bjass, bjdav, bjyt, bjmarca, docs, aurora" -ForegroundColor Gray
+
+    Write-Host "`n>> GIT" -ForegroundColor Yellow
+    Write-Host "  gs, ga, gc, gp, gpl, bj-sync" -ForegroundColor Gray
+    Write-Host "  aurora-deploy 'msg'   -> add + commit + push + linux pull" -ForegroundColor Gray
+
+    Write-Host "`n>> AURORA SERVER (Windows)" -ForegroundColor Yellow
+    Write-Host "  aurora-start   aurora-stop    aurora-check" -ForegroundColor Gray
+    Write-Host "  aurora-backend aurora-ely     aurora-live" -ForegroundColor Gray
+    Write-Host "  aurora-voz     aurora-voice" -ForegroundColor Gray
+
+    Write-Host "`n>> AURORA SERVER (Linux via SSH)" -ForegroundColor Yellow
+    Write-Host "  aurora-check-linux   aurora-start-linux [svc]" -ForegroundColor Gray
+    Write-Host "  aurora-stop-linux [svc]   aurora-pull-linux" -ForegroundColor Gray
+    Write-Host "  aurora-ssh   (alias: server)" -ForegroundColor Gray
+
+    Write-Host "`n>> DEV" -ForegroundColor Yellow
+    Write-Host "  dev, build, start, install   (bun)" -ForegroundColor Gray
+    Write-Host "  touch, ports, services, my-ip" -ForegroundColor Gray
+
+    Write-Host "`n>> SISTEMA" -ForegroundColor Yellow
+    Write-Host "  system-info, check-space, update-profile, edit-profile" -ForegroundColor Gray
+    Write-Host "  apps, apps-search, apps-upgrade" -ForegroundColor Gray
+
+    Write-Host "`n>> AUTOHOTKEY" -ForegroundColor Yellow
+    Write-Host "  ahk, ahk-reload, ahk-status" -ForegroundColor Gray
+    Write-Host "  ahk-alias / ahk-shortcuts  -> ver atajos AHK" -ForegroundColor Gray
+
+    Write-Host "`n>> CREATIVIDAD" -ForegroundColor Yellow
+    Write-Host "  color-palette, new-project" -ForegroundColor Gray
+
+    Write-Host "`n  help      -> referencia detallada con descripciones" -ForegroundColor Cyan
+    Write-Host "  ahk-alias -> atajos de teclado AutoHotkey" -ForegroundColor Cyan
+    Write-Host ""
+}
 Set-Alias -Name "aliases" -Value "Show-Aliases"
 
 # ===========================
@@ -581,7 +958,7 @@ Import-Module -Name Microsoft.WinGet.CommandNotFound
 #f45873b3-b655-43a6-b217-97c00aa0db58
 
 # ===========================
-# ðŸš€ [SERVERS] ConexiÃ³n Servidor
+# 🚀 [SERVERS] Conexión Servidor
 # ===========================
 function server {
     if ($args.Count -eq 0) {
@@ -590,3 +967,5 @@ function server {
         ssh -t biglexj@192.168.1.251 $args
     }
 }
+
+
