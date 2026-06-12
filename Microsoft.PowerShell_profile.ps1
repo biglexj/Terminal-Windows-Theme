@@ -4,7 +4,7 @@
 $ProfileStartTime = [DateTime]::Now
 
 # --- Oh My Posh theme path ---
-$env:POSH_THEMES_PATH = "D:\Assets\Themes\2. Windows\Terminal Windows\Themes"
+$env:POSH_THEMES_PATH = "D:\Proyectos\4. Temas\2. Windows\Terminal Windows\Themes"
 
 # --- Oh My Posh (tema personalizado) ---
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\biglexj.omp.json" | Invoke-Expression
@@ -143,6 +143,7 @@ function bjyt { Set-Location "$Drive\Imágenes\YouTube" }
 function bjmarca { Set-Location "$Drive\Imágenes\Proyectos\Marca" }
 function docs { Set-Location "$Drive\Proyectos\biglexj\Docs" }
 function aurora { Set-Location "$Drive\Proyectos\biglexj\Aurora---Blog" }
+function aurora-dev { Set-Location "$Drive\Proyectos\biglexj\Aurora---Blog"; bun dev }
 
 # ===========================
 # 🛠️ Utilidades de desarrollo
@@ -222,57 +223,9 @@ function aurora-live    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\serv
 function aurora-voz     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
 function aurora-voice   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_voice_pipeline.ps1" }
 
-# --- Linux (remoto via SSH) ---
+# --- Linux (remoto / port check) ---
 function aurora-check-linux {
-    $ip = "192.168.1.251"
-    $services = @(
-        # Familia 4000 - Frontend
-        @{ name = "Frontend (Astro)    "; port = 4321;  label = "4000 · Dev" },
-        # Familia 5000 - Core API
-        @{ name = "Aurora Core API C#  "; port = 5000;  label = "5000 · Core" },
-        @{ name = "Live API C#         "; port = 5050;  label = "5000 · Core" },
-        # Familia 6000 - Voz
-        @{ name = "VozEly Python XTTS  "; port = 6000;  label = "6000 · Voz" },
-        @{ name = "Voice Companion C#  "; port = 6080;  label = "6000 · Voz" },
-        # Familia 7000 - AI
-        @{ name = "Ely Intelligence    "; port = 7000;  label = "7000 · AI" },
-        # Familia 8000 - Coolify/Traefik
-        @{ name = "Coolify Dashboard   "; port = 8000;  label = "8000 · Infra" },
-        @{ name = "Traefik Proxy      "; port = 8080;  label = "8000 · Infra" },
-        # Familia 9000 - Storage
-        @{ name = "MinIO S3 API        "; port = 9000;  label = "9000 · Storage" },
-        @{ name = "MinIO Web Console   "; port = 9001;  label = "9000 · Storage" },
-        # Infra DevOps
-        @{ name = "Portainer           "; port = 9443;  label = "Infra" },
-        @{ name = "Grafana             "; port = 3000;  label = "Infra" }
-    )
-    Write-Host ""
-    Write-Host "[Linux] Monitoreo Aurora — $ip" -ForegroundColor Cyan
-    Write-Host ("─" * 62) -ForegroundColor DarkGray
-    foreach ($svc in $services) {
-        $tcp = New-Object System.Net.Sockets.TcpClient
-        $active = $false
-        try { $tcp.Connect($ip, $svc.port); $active = $tcp.Connected } catch {} finally { $tcp.Close() }
-        $label = "[$($svc.label)]".PadRight(18)
-        if ($active) {
-            Write-Host "  " -NoNewline
-            Write-Host "●" -ForegroundColor Green -NoNewline
-            Write-Host " $($svc.name)" -NoNewline
-            Write-Host $label -ForegroundColor DarkGray -NoNewline
-            Write-Host "[ACTIVO] " -ForegroundColor Green -NoNewline
-            Write-Host "→ :$($svc.port)"
-        } else {
-            Write-Host "  " -NoNewline
-            Write-Host "○" -ForegroundColor DarkGray -NoNewline
-            Write-Host " $($svc.name)" -NoNewline
-            Write-Host $label -ForegroundColor DarkGray -NoNewline
-            Write-Host "[offline] → :$($svc.port)" -ForegroundColor DarkGray
-        }
-    }
-    Write-Host ("─" * 62) -ForegroundColor DarkGray
-    Write-Host ""
-    Write-Host "  ⚠  Si Coolify corre en :8000 choca con VozEly — moverlo a :8443" -ForegroundColor Yellow
-    Write-Host ""
+    bun "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\check-services.ts" "192.168.1.251"
 }
 function aurora-start-linux { ssh -t $AuroraServer "bash $AuroraScripts/aurora-start.sh $args" }
 function aurora-stop-linux  { ssh -t $AuroraServer "bash $AuroraScripts/aurora-stop.sh $args" }
