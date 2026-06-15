@@ -2,6 +2,8 @@
 
 Una configuración premium de PowerShell 7 diseñada para optimizar el desarrollo, la creación de contenido y la experiencia en la terminal, con una visualización y rendimiento optimizados.
 
+![Vista Previa](Preview/Terminal.png)
+
 ---
 
 ## 📋 Requisitos
