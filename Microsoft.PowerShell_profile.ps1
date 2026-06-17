@@ -753,6 +753,13 @@ function Show-Help {
     Write-Host "  wav2flac     → Convertir archivos WAV a FLAC" -ForegroundColor Gray
     Write-Host "  undo-org     → Deshacer cambios de organización" -ForegroundColor Gray
     Write-Host "  screaming    → Setup Screaming Architecture" -ForegroundColor Gray
+    Write-Host "  metadata-extract → Extraer metadatos FLAC a un archivo JSON" -ForegroundColor Gray
+    Write-Host "  metadata-merge   → Unificar archivos JSON de metadatos" -ForegroundColor Gray
+    Write-Host "  metadata-sync    → Sincronizar metadatos del JSON a archivos FLAC" -ForegroundColor Gray
+    Write-Host "  crear-est-python → Crear estructura de proyecto Python" -ForegroundColor Gray
+    Write-Host "  crear-est-html   → Crear estructura de proyecto HTML/JS/CSS" -ForegroundColor Gray
+    Write-Host "  crear-est-backend→ Crear estructura de proyecto Express/TS/Supabase" -ForegroundColor Gray
+    Write-Host "  yt-notion-sync   → Sincronizar estadísticas de YouTube con Notion" -ForegroundColor Gray
     Write-Host "  clonar       → Alias de clonar-est" -ForegroundColor Gray
     Write-Host "  renombrar    → Alias de renombrar-it" -ForegroundColor Gray
 
@@ -796,8 +803,9 @@ function Show-Help {
     Write-Host "  gs, ga, gc, gp, gpl, bj-sync, dev, build, start, install" -ForegroundColor Gray
 
     Write-Host "`n📌 SCRIPTS" -ForegroundColor Yellow
-    Write-Host "  clonar-est, crear-sub, renombrar-it, sfx-gen, wav2flac," -ForegroundColor Gray
-    Write-Host "  undo-org, screaming, clonar, renombrar" -ForegroundColor Gray
+    Write-Host "  clonar-est, crear-sub, renombrar-it, sfx-gen, wav2flac, undo-org, screaming," -ForegroundColor Gray
+    Write-Host "  metadata-extract, metadata-merge, metadata-sync, yt-notion-sync," -ForegroundColor Gray
+    Write-Host "  crear-est-python, crear-est-html, crear-est-backend" -ForegroundColor Gray
 
     Write-Host "`n🎬 PRODUCCIÓN" -ForegroundColor Yellow
     Write-Host "  new-project" -ForegroundColor Gray
@@ -869,6 +877,11 @@ function Show-Aliases {
     Write-Host "`n>> CREATIVIDAD" -ForegroundColor Yellow
     Write-Host "  color-palette, new-project" -ForegroundColor Gray
 
+    Write-Host "`n>> UTILITY SCRIPTS" -ForegroundColor Yellow
+    Write-Host "  clonar-est, crear-sub, renombrar-it, sfx-gen, wav2flac, undo-org, screaming" -ForegroundColor Gray
+    Write-Host "  metadata-extract, metadata-merge, metadata-sync, yt-notion-sync" -ForegroundColor Gray
+    Write-Host "  crear-est-python, crear-est-html, crear-est-backend" -ForegroundColor Gray
+
     Write-Host "`n  help      -> referencia detallada con descripciones" -ForegroundColor Cyan
     Write-Host "  ahk-alias -> atajos de teclado AutoHotkey" -ForegroundColor Cyan
     Write-Host ""
@@ -894,6 +907,19 @@ function Wav2Flac { python "$Drive\Proyectos\biglexj\Scripts\multimedia\wav_a_fl
 # --- Antiguos / Otros ---
 function Setup-ScreamingArch { & "$Drive\Proyectos\biglexj\Scripts\Estructure\setup-screaming-architecture.ps1" }
 
+# --- Multimedia Adicional ---
+function Extract-Metadata { python "$Drive\Proyectos\biglexj\Scripts\multimedia\extract_metadata_to_json.py" @args }
+function Merge-Metadata { python "$Drive\Proyectos\biglexj\Scripts\multimedia\merge_json_metadata.py" @args }
+function Sync-Metadata { python "$Drive\Proyectos\biglexj\Scripts\multimedia\sync_json_to_flac.py" @args }
+
+# --- Estructura Proyectos ---
+function Crear-Estructura-Python { & "$Drive\Proyectos\biglexj\Scripts\Estructure\crear_estructura.ps1" }
+function Crear-Estructura-HTML { & "$Drive\Proyectos\biglexj\Scripts\Estructure\crear_estructura_html.ps1" }
+function Crear-Estructura-Backend { & "$Drive\Proyectos\biglexj\Scripts\Estructure\backen.ps1" }
+
+# --- YouTube & Notion ---
+function Sync-YoutubeNotion { python "$Drive\Proyectos\biglexj\Scripts\YouTube-Subs\youtube_notion_sync.py" @args }
+
 # --- ALIASES ---
 Set-Alias -Name "clonar-est" -Value Clonar-Estructura
 Set-Alias -Name "crear-sub"  -Value Crear-Subcarpetas
@@ -902,6 +928,13 @@ Set-Alias -Name "renombrar-it" -Value Renombrar-It
 Set-Alias -Name "sfx-gen"    -Value SFX-Gen
 Set-Alias -Name "wav2flac"   -Value Wav2Flac
 Set-Alias -Name "screaming"  -Value Setup-ScreamingArch
+Set-Alias -Name "metadata-extract" -Value Extract-Metadata
+Set-Alias -Name "metadata-merge"   -Value Merge-Metadata
+Set-Alias -Name "metadata-sync"    -Value Sync-Metadata
+Set-Alias -Name "crear-est-python" -Value Crear-Estructura-Python
+Set-Alias -Name "crear-est-html"   -Value Crear-Estructura-HTML
+Set-Alias -Name "crear-est-backend" -Value Crear-Estructura-Backend
+Set-Alias -Name "yt-notion-sync"   -Value Sync-YoutubeNotion
 
 # Compatibilidad con nombres antiguos
 Set-Alias -Name "clonar"     -Value Clonar-Estructura
