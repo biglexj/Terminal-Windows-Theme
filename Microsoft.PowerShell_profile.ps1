@@ -218,10 +218,10 @@ function aurora-start   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\serv
 function aurora-stop    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_services.ps1" }
 function aurora-check   { bun "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\check-services.ts" }
 function aurora-backend { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
-function aurora-ely     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
 function aurora-live    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
 function aurora-voz     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
-function aurora-voice   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_voice_pipeline.ps1" }
+function aurora-ely     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_core.ps1" }
+function aurora-voice   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
 
 # --- Linux (remoto / port check) ---
 function aurora-check-linux {
@@ -293,9 +293,10 @@ Set-Alias -Name start-aurora     -Value aurora-start     -Option AllScope
 Set-Alias -Name stop-aurora      -Value aurora-stop      -Option AllScope
 Set-Alias -Name check-aurora     -Value aurora-check     -Option AllScope
 Set-Alias -Name backend          -Value aurora-backend   -Option AllScope
-Set-Alias -Name ely-intelligence -Value aurora-ely       -Option AllScope
 Set-Alias -Name live             -Value aurora-live      -Option AllScope
 Set-Alias -Name vozely           -Value aurora-voz       -Option AllScope
+Set-Alias -Name ely-core         -Value aurora-ely       -Option AllScope
+Set-Alias -Name ely-intelligence -Value aurora-voice     -Option AllScope
 Set-Alias -Name voice-ely        -Value aurora-voice     -Option AllScope
 Set-Alias -Name server           -Value aurora-ssh       -Option AllScope
 
@@ -768,14 +769,15 @@ function Show-Help {
     Write-Host "               (Detecta canal, tipo y numeración automática)" -ForegroundColor DarkGray
 
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
-    Write-Host "  start-aurora    → Iniciar servicios de Aurora" -ForegroundColor Gray
-    Write-Host "  stop-aurora     → Detener servicios de Aurora" -ForegroundColor Gray
-    Write-Host "  check-aurora    → Verificar estado de los servicios (puertos)" -ForegroundColor Gray
-    Write-Host "  backend         → Iniciar backend C#" -ForegroundColor Gray
-    Write-Host "  ely-intelligence → Iniciar servidor principal de Ely" -ForegroundColor Gray
-    Write-Host "  live            → Iniciar sistema de Live Stream" -ForegroundColor Gray
-    Write-Host "  vozely          → Iniciar motor de voz con IA (XTTS)" -ForegroundColor Gray
-    Write-Host "  voice-ely       → Iniciar pipeline de voz Ely" -ForegroundColor Gray
+    Write-Host "  start-aurora     → Iniciar servicios de Aurora" -ForegroundColor Gray
+    Write-Host "  stop-aurora      → Detener servicios de Aurora" -ForegroundColor Gray
+    Write-Host "  check-aurora     → Verificar estado de los servicios (puertos)" -ForegroundColor Gray
+    Write-Host "  backend          → Iniciar backend C# (puerto 5000)" -ForegroundColor Gray
+    Write-Host "  live             → Iniciar sistema de Live Stream (puerto 5050)" -ForegroundColor Gray
+    Write-Host "  vozely           → Iniciar motor de voz con IA XTTS (puerto 6000)" -ForegroundColor Gray
+    Write-Host "  ely-core         → Iniciar Ely Core AI Gateway (puerto 7000)" -ForegroundColor Gray
+    Write-Host "  ely-intelligence → Iniciar asistente Ely Intelligence (puerto 7090)" -ForegroundColor Gray
+    Write-Host "  voice-ely        → Alias de ely-intelligence (puerto 7090)" -ForegroundColor Gray
 
     Write-Host "`n🎨 UTILIDADES CREATIVAS" -ForegroundColor Yellow
     Write-Host "  color-palette → Mostrar paleta de colores oficial (Biglex J & Ely)" -ForegroundColor Gray
@@ -811,8 +813,8 @@ function Show-Help {
     Write-Host "  new-project" -ForegroundColor Gray
 
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
-    Write-Host "  start-aurora, stop-aurora, check-aurora, backend," -ForegroundColor Gray
-    Write-Host "  ely-intelligence, live, vozely, voice-ely" -ForegroundColor Gray
+    Write-Host "  start-aurora, stop-aurora, check-aurora, backend, live, vozely," -ForegroundColor Gray
+    Write-Host "  ely-core, ely-intelligence (voice-ely)" -ForegroundColor Gray
 
     Write-Host "`n🎨 CREATIVIDAD" -ForegroundColor Yellow
     Write-Host "  color-palette" -ForegroundColor Gray
@@ -853,9 +855,9 @@ function Show-Aliases {
     Write-Host "  aurora-deploy 'msg'   -> add + commit + push + linux pull" -ForegroundColor Gray
 
     Write-Host "`n>> AURORA SERVER (Windows)" -ForegroundColor Yellow
-    Write-Host "  aurora-start   aurora-stop    aurora-check" -ForegroundColor Gray
-    Write-Host "  aurora-backend aurora-ely     aurora-live" -ForegroundColor Gray
-    Write-Host "  aurora-voz     aurora-voice" -ForegroundColor Gray
+    Write-Host "  aurora-start     aurora-stop      aurora-check" -ForegroundColor Gray
+    Write-Host "  aurora-backend   aurora-live      aurora-voz" -ForegroundColor Gray
+    Write-Host "  aurora-ely       aurora-voice" -ForegroundColor Gray
 
     Write-Host "`n>> AURORA SERVER (Linux via SSH)" -ForegroundColor Yellow
     Write-Host "  aurora-check-linux   aurora-start-linux [svc]" -ForegroundColor Gray
