@@ -217,11 +217,12 @@ $AuroraScripts = "/var/www/aurora-blog/scripts/server"
 function aurora-start   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_services.ps1" }
 function aurora-stop    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_services.ps1" }
 function aurora-check   { bun "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\check-services.ts" }
-function aurora-backend { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
-function aurora-live    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
-function aurora-voz     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
-function aurora-ely     { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_core.ps1" }
-function aurora-voice   { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
+function aurora-backend    { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_backend_cs.ps1" }
+function aurora-live       { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_live.ps1" }
+function aurora-voz        { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_voz_ely.ps1" }
+function aurora-ely        { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_core.ps1" }
+function aurora-voice      { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\start_ely_intelligence.ps1" }
+function aurora-voice-stop { & "$Drive\Proyectos\biglexj\Aurora---Blog\scripts\server\stop_ely_intelligence.ps1" }
 
 # --- Linux (remoto / port check) ---
 function aurora-check-linux {
@@ -298,6 +299,7 @@ Set-Alias -Name vozely           -Value aurora-voz       -Option AllScope
 Set-Alias -Name ely-core         -Value aurora-ely       -Option AllScope
 Set-Alias -Name ely-intelligence -Value aurora-voice     -Option AllScope
 Set-Alias -Name voice-ely        -Value aurora-voice     -Option AllScope
+Set-Alias -Name voice-ely-stop   -Value aurora-voice-stop -Option AllScope
 Set-Alias -Name server           -Value aurora-ssh       -Option AllScope
 
 
@@ -535,7 +537,9 @@ function ahk-alias {
 
             if ($currentSection -eq "Ely Voice Pipeline") {
                 Write-Host ("  " + "Ctrl + Alt + Shift + I".PadRight(26)) -ForegroundColor Cyan -NoNewline
-                Write-Host "-> Iniciar Ely Voice Pipeline" -ForegroundColor White
+                Write-Host "-> Iniciar Ely Intelligence" -ForegroundColor White
+                Write-Host ("  " + "Ctrl + Alt + Shift + O".PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> Detener Ely Intelligence" -ForegroundColor White
                 Write-Host ("  " + "Ctrl + Shift + E".PadRight(26)) -ForegroundColor Cyan -NoNewline
                 Write-Host "-> Activar/Silenciar Micrófono" -ForegroundColor White
                 Write-Host ("  " + "Ctrl + Shift + W".PadRight(26)) -ForegroundColor Cyan -NoNewline
@@ -778,6 +782,7 @@ function Show-Help {
     Write-Host "  ely-core         → Iniciar Ely Core AI Gateway (puerto 7000)" -ForegroundColor Gray
     Write-Host "  ely-intelligence → Iniciar asistente Ely Intelligence (puerto 7090)" -ForegroundColor Gray
     Write-Host "  voice-ely        → Alias de ely-intelligence (puerto 7090)" -ForegroundColor Gray
+    Write-Host "  voice-ely-stop   → Detener asistente Ely Intelligence (puerto 7090)" -ForegroundColor Gray
 
     Write-Host "`n🎨 UTILIDADES CREATIVAS" -ForegroundColor Yellow
     Write-Host "  color-palette → Mostrar paleta de colores oficial (Biglex J & Ely)" -ForegroundColor Gray
@@ -855,9 +860,9 @@ function Show-Aliases {
     Write-Host "  aurora-deploy 'msg'   -> add + commit + push + linux pull" -ForegroundColor Gray
 
     Write-Host "`n>> AURORA SERVER (Windows)" -ForegroundColor Yellow
-    Write-Host "  aurora-start     aurora-stop      aurora-check" -ForegroundColor Gray
-    Write-Host "  aurora-backend   aurora-live      aurora-voz" -ForegroundColor Gray
-    Write-Host "  aurora-ely       aurora-voice" -ForegroundColor Gray
+    Write-Host "  aurora-start     aurora-stop         aurora-check" -ForegroundColor Gray
+    Write-Host "  aurora-backend   aurora-live         aurora-voz" -ForegroundColor Gray
+    Write-Host "  aurora-ely       aurora-voice        aurora-voice-stop" -ForegroundColor Gray
 
     Write-Host "`n>> AURORA SERVER (Linux via SSH)" -ForegroundColor Yellow
     Write-Host "  aurora-check-linux   aurora-start-linux [svc]" -ForegroundColor Gray
