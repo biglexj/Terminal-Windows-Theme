@@ -84,36 +84,36 @@ function Show-SystemInfoTable {
         @{ Label = " Fecha";     Value = Get-Date -Format 'dd/MM/yyyy HH:mm' },
         @{ Label = " PowerShell";Value = "v$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)" }
     )
-    
+
     # Usar el mismo ancho que el banner (67 caracteres)
     $tableWidth = 67
     $colors = @('Green', 'Yellow', 'Magenta', 'Blue', 'Cyan', 'Red')
-    
+
     # Línea superior
     Write-Host ("┌" + "─" * ($tableWidth - 2) + "┐") -ForegroundColor $colors[0]
-    
+
     # Filas de datos
     $data | ForEach-Object -Begin { $i = 0 } -Process {
         $row = $_
         $textColor = $colors[$i % $colors.Length]
         $borderColor = $colors[0]
-        
+
         $left = $row.Label.PadRight(20)
         $right = $row.Value
-        
+
         # Calcular espacios para llenar exactamente el ancho de la tabla
         $contentLength = $left.Length + 3 + $right.Length
         $padding = $tableWidth - $contentLength - 2
         if ($padding -lt 0) { $padding = 0 }
-        
+
         # Línea de contenido
         Write-Host "│" -ForegroundColor $borderColor -NoNewline
         Write-Host "$left | $right" -ForegroundColor $textColor -NoNewline
         Write-Host (" " * $padding) -NoNewline
         Write-Host "│" -ForegroundColor $borderColor
         $i++
-    } 
-    
+    }
+
     # Línea inferior
     Write-Host ("└" + "─" * ($tableWidth - 2) + "┘") -ForegroundColor $colors[0]
 }
@@ -121,7 +121,7 @@ function Show-SystemInfoTable {
 Show-SystemInfoTable
 
 # ===========================
-# 🔗 Aliases de navegación rápida 
+# 🔗 Aliases de navegación rápida
 # ===========================
 function .. { Set-Location ".." }
 function ... { Set-Location "..\.." }
@@ -160,18 +160,18 @@ function touch {
 }
 
 # Git shortcuts con feedback visual
-function gs { 
+function gs {
     git status
     Write-Host "📊 Estado del repositorio mostrado" -ForegroundColor Cyan
 }
 
-function ga { 
+function ga {
     param([string]$files = ".")
     git add $files
     Write-Host "➕ Archivos agregados al staging" -ForegroundColor Green
 }
 
-function gc { 
+function gc {
     param([string]$message)
     if ($message) {
         git commit -m $message
@@ -181,12 +181,12 @@ function gc {
     }
 }
 
-function gp { 
+function gp {
     git push
     Write-Host "🚀 Cambios enviados al repositorio remoto" -ForegroundColor Green
 }
 
-function gpl { 
+function gpl {
     git pull
     Write-Host "⬇️  Cambios descargados del repositorio remoto" -ForegroundColor Blue
 }
@@ -312,7 +312,7 @@ function color-palette {
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║              🎨 PALETA OFICIAL BIGLEX J                        ║" -ForegroundColor Cyan
     Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
-    
+
     # Grid de colores Biglex J
     Write-Host "┌────────────┬────────────┬────────────┬────────────┐" -ForegroundColor DarkGray
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
@@ -324,7 +324,7 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "████████" -NoNewline -ForegroundColor Blue
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "#00AAFF" -NoNewline -ForegroundColor White
     Write-Host "   │  " -NoNewline -ForegroundColor DarkGray
@@ -334,7 +334,7 @@ function color-palette {
     Write-Host "   │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "#5B4CFF" -NoNewline -ForegroundColor White
     Write-Host "   │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Cyan Base" -NoNewline -ForegroundColor Gray
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
@@ -344,13 +344,13 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Morado   " -NoNewline -ForegroundColor Gray
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "└────────────┴────────────┴────────────┴────────────┘" -ForegroundColor DarkGray
-    
+
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
     Write-Host "║             🎨 PALETA OFICIAL ELY VTUBER                       ║" -ForegroundColor Magenta
     Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Magenta
-    
+
     # Grid de colores Ely VTuber
     Write-Host "┌────────────┬────────────┬────────────┬────────────┐" -ForegroundColor DarkGray
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
@@ -362,7 +362,7 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "████████" -NoNewline -ForegroundColor Yellow
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "#00C7B1" -NoNewline -ForegroundColor White
     Write-Host "   │  " -NoNewline -ForegroundColor DarkGray
@@ -372,7 +372,7 @@ function color-palette {
     Write-Host "   │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "#FFE6CA" -NoNewline -ForegroundColor White
     Write-Host "   │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Turquesa " -NoNewline -ForegroundColor Gray
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
@@ -382,13 +382,13 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Beige    " -NoNewline -ForegroundColor Gray
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "└────────────┴────────────┴────────────┴────────────┘" -ForegroundColor DarkGray
-    
+
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Yellow
     Write-Host "║         🎨 COLORES ADICIONALES INDEPENDIENTES                  ║" -ForegroundColor Yellow
     Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Yellow
-    
+
     # Grid de colores adicionales
     Write-Host "┌────────────┬────────────┬────────────┬────────────┐" -ForegroundColor DarkGray
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
@@ -400,7 +400,7 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "████████" -NoNewline -ForegroundColor Cyan
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "#01D6B9" -NoNewline -ForegroundColor White
     Write-Host "   │  " -NoNewline -ForegroundColor DarkGray
@@ -410,7 +410,7 @@ function color-palette {
     Write-Host "   │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "#A5FFED" -NoNewline -ForegroundColor White
     Write-Host "   │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Turquesa " -NoNewline -ForegroundColor Gray
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
@@ -420,7 +420,7 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Cyan     " -NoNewline -ForegroundColor Gray
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "│  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Brillante" -NoNewline -ForegroundColor Gray
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
@@ -430,7 +430,7 @@ function color-palette {
     Write-Host "  │  " -NoNewline -ForegroundColor DarkGray
     Write-Host "Claro    " -NoNewline -ForegroundColor Gray
     Write-Host "  │" -ForegroundColor DarkGray
-    
+
     Write-Host "└────────────┴────────────┴────────────┴────────────┘`n" -ForegroundColor DarkGray
 }
 
@@ -488,12 +488,12 @@ function edit-profile {
 }
 
 function ahk {
-    code "D:\Windows\AutoHotKey\biglexj.ahk"
+    code "D:\Proyectos\4. Temas\2. Windows\AutoHotKey\biglexj.ahk"
 }
 
 function ahk-reload {
-    if (Test-Path "D:\Windows\AutoHotKey\biglexj.ahk") {
-        Start-Process "D:\Windows\AutoHotKey\biglexj.ahk"
+    if (Test-Path "D:\Proyectos\4. Temas\2. Windows\AutoHotKey\biglexj.ahk") {
+        Start-Process "D:\Proyectos\4. Temas\2. Windows\AutoHotKey\biglexj.ahk"
         Write-Host "🔄 Configuración de AutoHotkey recargada" -ForegroundColor Green
     } else {
         Write-Host "❌ No se encontró el archivo AHK" -ForegroundColor Red
@@ -510,7 +510,7 @@ function ahk-status {
 }
 
 function ahk-alias {
-    $ahkPath = "D:\Windows\AutoHotKey\biglexj.ahk"
+    $ahkPath = "D:\Proyectos\4. Temas\2. Windows\AutoHotKey\biglexj.ahk"
     if (!(Test-Path $ahkPath)) { Write-Host "No se encontro el archivo AHK" -ForegroundColor Red; return }
 
     Write-Host ""
@@ -526,15 +526,29 @@ function ahk-alias {
         $line = $line.Trim()
 
         if ($line -match '^;\s*={3,}$') { continue }
-        if ($line -match '^;\s*(ATAJOS PARA APLICACIONES|ATAJOS DE CARPETAS|CONTROLES MULTIMEDIA|EXPANSION DE TEXTO|EXPANSION PARA STREAMING|POWER USER|CHAT Y STREAMING|UTILIDADES DE DESARROLLO|SOCIAL MEDIA|ATAJOS AURORA)') {
+        if ($line -match '^;\s*(ATAJOS PARA APLICACIONES|ATAJOS DE CARPETAS|CONTROLES MULTIMEDIA|GESTI[ÓO]N DEL ENTORNO|EXPANSI[ÓO]N DE TEXTO|EXPANSI[ÓO]N PARA STREAMING|POWER USER|CHAT Y STREAMING|UTILIDADES DE DESARROLLO|SOCIAL MEDIA|ATAJOS AURORA|ELY VOICE PIPELINE)') {
             $currentSection = $line -replace '^;\s*', ''
             Write-Host ""
             Write-Host ">> $currentSection" -ForegroundColor Yellow
             Write-Host ("--" * 30) -ForegroundColor DarkGray
+
+            if ($currentSection -eq "Ely Voice Pipeline") {
+                Write-Host ("  " + "Ctrl + Alt + Shift + I".PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> Iniciar Ely Voice Pipeline" -ForegroundColor White
+                Write-Host ("  " + "Ctrl + Shift + E".PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> Activar/Silenciar Micrófono" -ForegroundColor White
+                Write-Host ("  " + "Ctrl + Shift + W".PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> Activar/Desactivar Capturas (Visión)" -ForegroundColor White
+                Write-Host ("  " + "Ctrl + Shift + Q".PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> Captura de pantalla manual" -ForegroundColor White
+                Write-Host ("  " + "Ctrl + Shift + Alt + K".PadRight(26)) -ForegroundColor Cyan -NoNewline
+                Write-Host "-> Bloquear/Liberar atajos (E, W, Q)" -ForegroundColor White
+            }
         }
 
-        if ($line -match '^([#!^<>+*]*[a-zA-Z0-9_]+)::(.+)') {
+        if ($line -match '^([#!^<>+*~$]*[^:\s]+)\s*::(.*)') {
             $key  = $Matches[1]
+            if ($key -eq "^!+i") { continue }
             $rest = $Matches[2].Trim()
             $desc = ""
             if ($rest -match ';.*?-\s*(.+)$')  { $desc = $Matches[1].Trim() }
@@ -554,7 +568,7 @@ function ahk-alias {
             }
         }
 
-        if ($line -match '^::(\w+)::(.+)$') {
+        if ($line -match '^:.*:([^:]+)::(.+)$') {
             $trigger     = $Matches[1]
             $replacement = $Matches[2]
             if ($replacement -match 'SendText\("(.+)"\)') { $replacement = $Matches[1] -replace "``n", " " }
@@ -660,7 +674,7 @@ function path-show {
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Green
     Write-Host "║              🛤️ VARIABLES DE ENTORNO (PATH)                   ║" -ForegroundColor Green
     Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Green
-    
+
     Write-Host "👤 PATH DEL USUARIO:" -ForegroundColor Yellow
     $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
     if ($userPath) {
@@ -668,7 +682,7 @@ function path-show {
             Write-Host "  • $_" -ForegroundColor Gray
         }
     }
-    
+
     Write-Host "`n🔐 PATH DEL SISTEMA:" -ForegroundColor Yellow
     $sysPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
     if ($sysPath) {
@@ -683,10 +697,10 @@ function env-show {
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Magenta
     Write-Host "║              🌐 VARIABLES DE ENTORNO                          ║" -ForegroundColor Magenta
     Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Magenta
-    
+
     Write-Host "👤 VARIABLES DEL USUARIO:" -ForegroundColor Yellow
     [Environment]::GetEnvironmentVariables("User") | Format-Table -AutoSize
-    
+
     Write-Host "`n🔐 VARIABLES DEL SISTEMA:" -ForegroundColor Yellow
     [Environment]::GetEnvironmentVariables("Machine") | Format-Table -AutoSize
 }
@@ -700,7 +714,7 @@ function Show-Help {
     Write-Host "`n╔════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
     Write-Host "║               📚 AYUDA DE COMANDOS - BIGLEX J                  ║" -ForegroundColor Cyan
     Write-Host "╚════════════════════════════════════════════════════════════════╝`n" -ForegroundColor Cyan
-    
+
     Write-Host "🔗 NAVEGACIÓN RÁPIDA" -ForegroundColor Yellow
     Write-Host "  ..           → Subir un directorio" -ForegroundColor Gray
     Write-Host "  ...          → Subir dos directorios" -ForegroundColor Gray
@@ -718,7 +732,7 @@ function Show-Help {
     Write-Host "  docs         → Abrir la biblioteca de documentación" -ForegroundColor Gray
     Write-Host "  aurora       → Ir al proyecto Aurora Blog" -ForegroundColor Gray
     Write-Host "  bgm          → Abrir biblioteca de música de fondo" -ForegroundColor Gray
-    
+
     Write-Host "`n🛠️  DESARROLLO" -ForegroundColor Yellow
     Write-Host "  gs           → Mostrar estado del repositorio Git" -ForegroundColor Gray
     Write-Host "  ga [files]   → Agregar archivos al staging de Git" -ForegroundColor Gray
@@ -741,11 +755,11 @@ function Show-Help {
     Write-Host "  screaming    → Setup Screaming Architecture" -ForegroundColor Gray
     Write-Host "  clonar       → Alias de clonar-est" -ForegroundColor Gray
     Write-Host "  renombrar    → Alias de renombrar-it" -ForegroundColor Gray
-    
+
     Write-Host "`n🎬 PRODUCCIÓN DE CONTENIDO" -ForegroundColor Yellow
     Write-Host "  new-project  → Crear estructura de carpetas para nuevo video" -ForegroundColor Gray
     Write-Host "               (Detecta canal, tipo y numeración automática)" -ForegroundColor DarkGray
-    
+
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
     Write-Host "  start-aurora    → Iniciar servicios de Aurora" -ForegroundColor Gray
     Write-Host "  stop-aurora     → Detener servicios de Aurora" -ForegroundColor Gray
@@ -755,14 +769,14 @@ function Show-Help {
     Write-Host "  live            → Iniciar sistema de Live Stream" -ForegroundColor Gray
     Write-Host "  vozely          → Iniciar motor de voz con IA (XTTS)" -ForegroundColor Gray
     Write-Host "  voice-ely       → Iniciar pipeline de voz Ely" -ForegroundColor Gray
-    
+
     Write-Host "`n🎨 UTILIDADES CREATIVAS" -ForegroundColor Yellow
     Write-Host "  color-palette → Mostrar paleta de colores oficial (Biglex J & Ely)" -ForegroundColor Gray
-    
+
     Write-Host "`n🌐 WEB & REDES" -ForegroundColor Yellow
     Write-Host "  open-biglexj  → Abrir biglexj.com en navegador" -ForegroundColor Gray
     Write-Host "  open-youtube  → Abrir YouTube Studio" -ForegroundColor Gray
-    
+
     Write-Host "`n⚙️  SISTEMA" -ForegroundColor Yellow
     Write-Host "  system-info   → Mostrar información del sistema (fastfetch)" -ForegroundColor Gray
     Write-Host "  check-space   → Ver espacio disponible en discos" -ForegroundColor Gray
@@ -772,45 +786,45 @@ function Show-Help {
     Write-Host "  ports         → Ver puertos en uso" -ForegroundColor Gray
     Write-Host "  services      → Ver servicios del sistema activos" -ForegroundColor Gray
     Write-Host "  my-ip         → Mostrar IP pública y local" -ForegroundColor Gray
-    
+
     Write-Host "`n🛤️  PATH & ENTORNO" -ForegroundColor Yellow
     Write-Host "📁 NAVEGACIÓN" -ForegroundColor Yellow
     Write-Host "  .., ..., bjpro, bjpros, bjdes, bjdoc, bjimg, bjmus, bjvid," -ForegroundColor Gray
     Write-Host "  bjass, bjdav, bjyt, bjmarca, docs, aurora, bgm" -ForegroundColor Gray
-    
+
     Write-Host "🛠️  DESARROLLO" -ForegroundColor Yellow
     Write-Host "  gs, ga, gc, gp, gpl, bj-sync, dev, build, start, install" -ForegroundColor Gray
-    
+
     Write-Host "`n📌 SCRIPTS" -ForegroundColor Yellow
     Write-Host "  clonar-est, crear-sub, renombrar-it, sfx-gen, wav2flac," -ForegroundColor Gray
     Write-Host "  undo-org, screaming, clonar, renombrar" -ForegroundColor Gray
-    
+
     Write-Host "`n🎬 PRODUCCIÓN" -ForegroundColor Yellow
     Write-Host "  new-project" -ForegroundColor Gray
-    
+
     Write-Host "`n🤖 ELY INTELLIGENCE" -ForegroundColor Yellow
     Write-Host "  start-aurora, stop-aurora, check-aurora, backend," -ForegroundColor Gray
     Write-Host "  ely-intelligence, live, vozely, voice-ely" -ForegroundColor Gray
-    
+
     Write-Host "`n🎨 CREATIVIDAD" -ForegroundColor Yellow
     Write-Host "  color-palette" -ForegroundColor Gray
-    
+
     Write-Host "`n🌐 WEB" -ForegroundColor Yellow
     Write-Host "  open-biglexj, open-youtube" -ForegroundColor Gray
-    
+
     Write-Host "`n⚙️  SISTEMA" -ForegroundColor Yellow
     Write-Host "  system-info, check-space, update-profile, edit-profile, server," -ForegroundColor Gray
     Write-Host "  ports, services, my-ip" -ForegroundColor Gray
-    
+
     Write-Host "`n🛤️  PATH & ENTORNO" -ForegroundColor Yellow
     Write-Host "  path, path-admin, path-show, env-show" -ForegroundColor Gray
-    
+
     Write-Host "`n🔧 AUTOHOTKEY" -ForegroundColor Yellow
     Write-Host "  ahk, ahk-reload, ahk-status, ahk-alias, ahk-shortcuts" -ForegroundColor Gray
-    
+
     Write-Host "`n📦 APLICACIONES" -ForegroundColor Yellow
     Write-Host "  apps, apps-search, apps-upgrade, install" -ForegroundColor Gray
-    
+
     Write-Host "`n💡 Tip: Escribe 'help' para ver descripciones detalladas`n" -ForegroundColor Cyan
 }
 
@@ -920,5 +934,3 @@ function server {
         ssh -t biglexj@192.168.1.251 $args
     }
 }
-
-
